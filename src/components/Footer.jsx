@@ -101,7 +101,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
-            © 2025 Emmanuelle Singani. Tous droits réservés.
+            © 2025 Emmanuelle Singani. Tous droits réservés. Réalisé par MABIALA EULOGE.
           </p>
           <p className="text-muted-foreground text-sm flex items-center mt-4 md:mt-0">
             Fait avec <Heart className="w-4 h-4 text-red-500 mx-1" /> pour célébrer la beauté authentique
