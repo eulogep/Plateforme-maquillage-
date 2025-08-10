@@ -46,6 +46,8 @@ Ce projet est conçu pour être déployé sur des plateformes d'hébergement de 
 
 Pour un déploiement sur GitHub Pages, suivez les instructions dans les paramètres de votre dépôt GitHub (Settings -> Pages).
 
+Voici le lien Vercel pour visualiser le projet : https://plateforme-maquillage.vercel.app/
+
 ## Réalisé par
 
 MABIALA EULOGE
