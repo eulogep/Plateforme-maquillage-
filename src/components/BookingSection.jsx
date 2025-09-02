@@ -13,7 +13,7 @@ const BookingSection = () => {
       name: "Consultation Beauté Personnalisée",
       duration: "60 min",
       price: "85€",
-      description: "Analyse de votre peau, conseils personnalisés et création de votre routine beauté idéale",
+      description: "Une analyse approfondie de votre type de peau, des conseils personnalisés pour vos préoccupations spécifiques, et l'élaboration d'une routine beauté sur-mesure pour révéler votre éclat naturel. Idéal pour débuter votre parcours beauté avec Emma.",
       type: "video",
       icon: "💄",
       features: ["Analyse de peau", "Conseils personnalisés", "Routine sur-mesure", "Guide produits"]
@@ -23,7 +23,7 @@ const BookingSection = () => {
       name: "Séance Maquillage Signature",
       duration: "90 min",
       price: "120€",
-      description: "Maquillage professionnel avec mes techniques signature et mes produits exclusifs",
+      description: "Transformez votre look avec une séance de maquillage personnalisée. Emma appliquera ses techniques signature pour sublimer vos traits, en utilisant des produits exclusifs qui célèbrent votre beauté unique. Inclut des photos professionnelles pour immortaliser votre transformation.",
       type: "presential",
       icon: "✨",
       features: ["Maquillage complet", "Techniques signature", "Photos incluses", "Conseils application"]
@@ -33,7 +33,7 @@ const BookingSection = () => {
       name: "Masterclass Maquillage",
       duration: "45 min",
       price: "65€",
-      description: "Apprenez mes techniques de maquillage en visioconférence avec support personnalisé",
+      description: "Participez à une masterclass exclusive avec Emma pour maîtriser ses techniques de maquillage signature. Apprenez les secrets d'un teint impeccable, d'un regard captivant et d'une bouche parfaite. Idéal pour les passionnées de beauté souhaitant perfectionner leurs compétences.",
       type: "video",
       icon: "🎓",
       features: ["Techniques avancées", "Support vidéo", "Guide PDF", "Suivi 7 jours"]
@@ -43,7 +43,7 @@ const BookingSection = () => {
       name: "Transformation Complète",
       duration: "2h30",
       price: "200€",
-      description: "Expérience complète : consultation, maquillage, shooting photo et conseils lifestyle",
+      description: "L'expérience ultime pour une transformation complète. Cette formule inclut une consultation approfondie, une séance de maquillage signature, un shooting photo professionnel pour capturer votre nouveau look, et des conseils personnalisés pour un style de vie éclatant. Révélez la meilleure version de vous-même.",
       type: "presential",
       icon: "👑",
       features: ["Consultation complète", "Maquillage signature", "Shooting photo", "Conseils lifestyle"]
