@@ -1,3 +1,10 @@
+// @ts-nocheck — plain JS (see README: the .ts extension is required by
+// `supabase functions deploy`'s entrypoint convention, not because this is
+// typed). Needed here specifically because the untyped supabase-js client
+// infers a foreign-table embed like `customers(full_name,email)` as an
+// array type regardless of the relationship's actual to-one cardinality,
+// which PostgREST returns as a single object at runtime — a type/runtime
+// mismatch in the library's own inference, not a real bug in this file.
 // Supabase Edge Function: stripe-webhook
 //
 // The ONLY place an appointment is ever transitioned to 'confirmed'. Never
@@ -8,6 +15,11 @@ import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 import { AppError, extractAppointmentId, decideSucceededOutcome, decideFailureOutcome } from './logic.js'
 import { isHoldExpired } from '../_shared/holdLifecycle.js'
+import { businessInfo } from '../_shared/businessInfo.js'
+import { formatDateLabel, formatTimeLabel } from '../_shared/formatting.js'
+import { sendNotification } from '../_shared/notifications/send.js'
+import { syncConfirmedAppointmentToGoogleCalendar } from '../_shared/googleCalendar/sync.js'
+import { computeGoogleEventTimes } from '../_shared/googleCalendar/payload.js'
 
 function jsonResponse(status, body) {
   return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } })
@@ -90,7 +102,9 @@ Deno.serve(async (req) => {
 
       const { data: appointment, error: apptError } = await supabaseAdmin
         .from('appointments')
-        .select('id,status,amount_due_now_cents,hold_expires_at')
+        .select(
+          'id,status,amount_due_now_cents,remaining_balance_cents,hold_expires_at,appointment_date,start_time,service_id,customers(full_name,email),services(name,duration_minutes)'
+        )
         .eq('id', appointmentId)
         .maybeSingle()
       if (apptError) throw apptError
@@ -108,6 +122,63 @@ Deno.serve(async (req) => {
           .eq('id', appointmentId)
           .eq('status', 'payment_pending')
         if (confirmError) throw confirmError
+
+        // --- Confirmation email + calendar sync. Both are idempotent
+        //     (unique (appointment,type) / unique appointment_id
+        //     constraints) and never allowed to affect the webhook's own
+        //     success response — a redelivered event that hits this same
+        //     branch again (e.g. after a transient failure before this
+        //     point) will not double-send or double-create. ---
+        if (appointment.customers?.email) {
+          await sendNotification({
+            supabaseAdmin,
+            appointmentId,
+            notificationType: 'booking_confirmed',
+            to: appointment.customers.email,
+            resendApiKey: Deno.env.get('RESEND_API_KEY'),
+            resendFrom: Deno.env.get('RESEND_FROM_EMAIL') ?? 'onboarding@resend.dev',
+            appointmentForConfirmationGuard: { status: 'confirmed' },
+            templateContext: {
+              businessName: businessInfo.name,
+              locationLine: businessInfo.locationLine,
+              contactEmail: businessInfo.contactEmail,
+              contactPhone: businessInfo.contactPhone,
+              customerName: appointment.customers.full_name,
+              serviceName: appointment.services?.name ?? 'Appointment',
+              dateLabel: formatDateLabel(appointment.appointment_date),
+              timeLabel: formatTimeLabel(appointment.start_time.slice(0, 5)),
+              durationLabel: appointment.services?.duration_minutes ? `${appointment.services.duration_minutes} min` : undefined,
+              appointmentReference: appointmentId,
+              amountPaidCents: paymentIntent.amount_received ?? paymentIntent.amount,
+              remainingBalanceCents: appointment.remaining_balance_cents,
+            },
+          })
+        }
+
+        const { startIso, endIso } = computeGoogleEventTimes(
+          appointment.appointment_date,
+          appointment.start_time,
+          appointment.services?.duration_minutes ?? 60
+        )
+        await syncConfirmedAppointmentToGoogleCalendar({
+          supabaseAdmin,
+          appointmentId,
+          env: {
+            clientId: Deno.env.get('GOOGLE_CLIENT_ID'),
+            clientSecret: Deno.env.get('GOOGLE_CLIENT_SECRET'),
+            refreshToken: Deno.env.get('GOOGLE_REFRESH_TOKEN'),
+            calendarId: Deno.env.get('GOOGLE_CALENDAR_ID'),
+          },
+          eventContext: {
+            serviceName: appointment.services?.name ?? 'Appointment',
+            customerName: appointment.customers?.full_name,
+            startIso,
+            endIso,
+            timezone: businessInfo.timezone,
+            locationLine: businessInfo.locationLine,
+            reference: appointmentId,
+          },
+        })
       } else if (decision.action === 'record_exception') {
         await recordPaymentException(supabaseAdmin, {
           appointmentId,
@@ -124,7 +195,7 @@ Deno.serve(async (req) => {
       if (appointmentId) {
         const { data: appointment, error: apptError } = await supabaseAdmin
           .from('appointments')
-          .select('id,status')
+          .select('id,status,appointment_date,start_time,customers(full_name,email),services(name)')
           .eq('id', appointmentId)
           .maybeSingle()
         if (apptError) throw apptError
@@ -138,6 +209,30 @@ Deno.serve(async (req) => {
             .eq('id', appointmentId)
             .eq('status', 'payment_pending')
           if (updateError) throw updateError
+
+          // Only for a genuine decline/failure — not an intentional
+          // cancellation, which doesn't need "please try again" messaging.
+          if (event.type === 'payment_intent.payment_failed' && appointment.customers?.email) {
+            await sendNotification({
+              supabaseAdmin,
+              appointmentId,
+              notificationType: 'payment_failed',
+              to: appointment.customers.email,
+              resendApiKey: Deno.env.get('RESEND_API_KEY'),
+              resendFrom: Deno.env.get('RESEND_FROM_EMAIL') ?? 'onboarding@resend.dev',
+              templateContext: {
+                businessName: businessInfo.name,
+                locationLine: businessInfo.locationLine,
+                contactEmail: businessInfo.contactEmail,
+                contactPhone: businessInfo.contactPhone,
+                customerName: appointment.customers.full_name,
+                serviceName: appointment.services?.name ?? 'Appointment',
+                dateLabel: formatDateLabel(appointment.appointment_date),
+                timeLabel: formatTimeLabel(appointment.start_time.slice(0, 5)),
+                appointmentReference: appointmentId,
+              },
+            })
+          }
         }
       }
     }

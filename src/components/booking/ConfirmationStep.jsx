@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { portfolioImages } from '@/assets/portfolio'
-import { getServiceById, formatDateLong, formatTimeLabel } from '@/booking/bookingUtils'
+import { business } from '@/config/business'
+import { getServiceById, formatDateLong, formatTimeLabel, formatDateKeyInBusinessTimezone, parseDurationMinutes } from '@/booking/bookingUtils'
 import { describeStatus } from '@/booking/statuses'
 import { getBookingStatus } from '@/booking/bookingApi'
+import { generateIcs, downloadIcs } from '@/booking/generateIcs'
 
 const POLL_INTERVAL_MS = 2500
 const MAX_POLL_ATTEMPTS = 48 // ~2 minutes
@@ -56,6 +58,24 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
 
   const status = describeStatus(derivedStatus)
 
+  const handleAddToCalendar = () => {
+    try {
+      const ics = generateIcs({
+        serviceName: service?.name ?? 'Appointment',
+        businessName: business.name,
+        dateStr: formatDateKeyInBusinessTimezone(bookingData.date),
+        startTime: bookingData.time,
+        durationMinutes: parseDurationMinutes(service?.duration),
+        timezone: business.location.timezone,
+        locationLine: business.location.full,
+        reference: bookingData.appointmentId,
+      })
+      downloadIcs(ics, `${(service?.name ?? 'appointment').toLowerCase().replace(/\s+/g, '-')}.ics`)
+    } catch (err) {
+      console.error('Could not generate calendar file', err)
+    }
+  }
+
   return (
     <div className="flex min-h-[70vh] flex-col bg-brand-navy text-brand-cream">
       <div className="relative h-[220px] overflow-hidden">
@@ -92,8 +112,7 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
         <div className="border border-[#F7F1E9]/20 p-3.5 text-[11.5px] leading-[1.6] text-[#CBD1DC]">
           {isProcessing &&
             "We're waiting for your bank/Stripe to confirm the payment. This usually takes a few seconds — don't close this page."}
-          {isConfirmed &&
-            "You're booked. A confirmation email isn't sent yet — Emmanuelle's team will follow up directly."}
+          {isConfirmed && "You're booked. A confirmation email should be on its way to your inbox."}
           {isPaymentFailed && 'Your card was not charged. You can try a different payment method for this same slot.'}
           {isExpiredOrCancelled &&
             'This booking hold is no longer active. Please start a new booking to pick a slot again.'}
@@ -118,11 +137,12 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
 
         <button
           type="button"
+          onClick={handleAddToCalendar}
           disabled={!isConfirmed}
           className="mt-auto border border-[#F7F1E9]/50 p-3.5 text-center text-[11.5px] tracking-[.04em] disabled:opacity-50"
           title={isConfirmed ? undefined : "Add-to-calendar isn't available until the appointment is confirmed"}
         >
-          Add to calendar (coming soon)
+          Add to calendar
         </button>
         <button
           type="button"

@@ -1,3 +1,10 @@
+// @ts-nocheck — plain JS (see README: the .ts extension is required by
+// `supabase functions deploy`'s entrypoint convention, not because this is
+// typed). Needed here specifically because the untyped supabase-js client
+// infers a foreign-table embed like `customers(full_name,email)` as an
+// array type regardless of the relationship's actual to-one cardinality,
+// which PostgREST returns as a single object at runtime — a type/runtime
+// mismatch in the library's own inference, not a real bug in this file.
 // Supabase Edge Function: create-payment-intent
 //
 // Creates (or safely reuses) a Stripe PaymentIntent for an existing
@@ -18,6 +25,9 @@ import {
 import { corsHeaders } from '../_shared/cors.js'
 import { expireStaleHolds, computeHoldExpiresAt, resolveHoldDurationMinutes } from '../_shared/holdLifecycle.js'
 import { depositConfig, calculateDeposit } from '../_shared/depositConfig.js'
+import { businessInfo } from '../_shared/businessInfo.js'
+import { formatDateLabel, formatTimeLabel } from '../_shared/formatting.js'
+import { sendNotification } from '../_shared/notifications/send.js'
 
 const ERROR_STATUS = {
   INVALID_INPUT: 422,
@@ -62,17 +72,47 @@ Deno.serve(async (req) => {
 
     const { data: appointment, error: apptError } = await supabaseAdmin
       .from('appointments')
-      .select('id,status,service_id,stripe_payment_intent_id')
+      .select(
+        'id,status,service_id,stripe_payment_intent_id,appointment_date,start_time,customers(full_name,email),services(name)'
+      )
       .eq('id', appointmentId)
       .maybeSingle()
     if (apptError) throw apptError
+
+    // The sweep above may have just expired THIS appointment (the customer
+    // came back to pay after their hold lapsed) — that's a real, natural
+    // trigger point for the (optional) booking_expired email, distinct
+    // from create-booking's global multi-row sweep which doesn't have a
+    // single customer to notify.
+    if (appointment?.status === 'expired' && appointment.customers?.email) {
+      await sendNotification({
+        supabaseAdmin,
+        appointmentId: appointment.id,
+        notificationType: 'booking_expired',
+        to: appointment.customers.email,
+        resendApiKey: Deno.env.get('RESEND_API_KEY'),
+        resendFrom: Deno.env.get('RESEND_FROM_EMAIL') ?? 'onboarding@resend.dev',
+        templateContext: {
+          businessName: businessInfo.name,
+          locationLine: businessInfo.locationLine,
+          contactEmail: businessInfo.contactEmail,
+          contactPhone: businessInfo.contactPhone,
+          customerName: appointment.customers.full_name,
+          serviceName: appointment.services?.name ?? 'Appointment',
+          dateLabel: formatDateLabel(appointment.appointment_date),
+          timeLabel: formatTimeLabel(appointment.start_time.slice(0, 5)),
+          appointmentReference: appointment.id,
+        },
+      })
+    }
+
     assertAppointmentPayable(appointment)
 
     // --- Authoritative price: loaded server-side, never trusted from the
     //     client. ---
     const { data: service, error: serviceError } = await supabaseAdmin
       .from('services')
-      .select('id,price_cents,active')
+      .select('id,name,duration_minutes,price_cents,active')
       .eq('id', appointment.service_id)
       .maybeSingle()
     if (serviceError) throw serviceError
@@ -145,6 +185,35 @@ Deno.serve(async (req) => {
       .eq('id', appointment.id)
       .in('status', ['pending', 'payment_pending'])
     if (updateError) throw updateError
+
+    // --- Notification: fire-and-forget-but-awaited, never lets a failure
+    //     here affect the successful response above. Idempotent per
+    //     (appointment, type) — a retried create-payment-intent call for
+    //     the same appointment won't send this twice. ---
+    if (appointment.customers?.email) {
+      await sendNotification({
+        supabaseAdmin,
+        appointmentId: appointment.id,
+        notificationType: 'booking_payment_pending',
+        to: appointment.customers.email,
+        resendApiKey: Deno.env.get('RESEND_API_KEY'),
+        resendFrom: Deno.env.get('RESEND_FROM_EMAIL') ?? 'onboarding@resend.dev',
+        templateContext: {
+          businessName: businessInfo.name,
+          locationLine: businessInfo.locationLine,
+          contactEmail: businessInfo.contactEmail,
+          contactPhone: businessInfo.contactPhone,
+          customerName: appointment.customers.full_name,
+          serviceName: service.name,
+          dateLabel: formatDateLabel(appointment.appointment_date),
+          timeLabel: formatTimeLabel(appointment.start_time.slice(0, 5)),
+          durationLabel: `${service.duration_minutes} min`,
+          appointmentReference: appointment.id,
+          amountDueNowCents,
+          remainingBalanceCents,
+        },
+      })
+    }
 
     return jsonResponse(
       200,
