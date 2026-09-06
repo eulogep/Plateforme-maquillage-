@@ -7,7 +7,7 @@ import ArtistrySection from './components/ArtistrySection'
 import AboutSection from './components/AboutSection'
 import PoliciesSection from './components/PoliciesSection'
 import FinalCta from './components/FinalCta'
-import BookingSection from './components/BookingSection'
+import BookingFlow from './components/booking/BookingFlow'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 
@@ -23,7 +23,7 @@ function App() {
         <AboutSection />
         <PoliciesSection />
         <FinalCta />
-        <BookingSection />
+        <BookingFlow />
         <ContactSection />
       </main>
       <Footer />
