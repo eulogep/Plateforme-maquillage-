@@ -6,30 +6,50 @@ variable.
 
 ## Files
 
-- `index.ts` — the Deno entrypoint (HTTP handling, Supabase queries/writes,
-  Storage upload). **Not runnable in this repo's environment** — no Deno
-  runtime and no live Supabase project are available here, so this file has
-  not been executed. Deploy it and exercise it via `supabase functions
-  serve` / a real project.
+- `index.js` — the Deno entrypoint (HTTP handling, Supabase queries/writes,
+  Storage upload). Plain JS, not TypeScript (it was briefly named
+  `index.ts` with no type annotations — `deno check` correctly flagged
+  that as untyped, so it's named accurately now).
 - `logic.js` — pure, dependency-free validation/computation logic used by
-  `index.ts`. Deliberately has zero imports (not even from `src/`, since
+  `index.js`. Deliberately has zero imports (not even from `src/`, since
   Vite's `@/` alias doesn't exist under Deno) so it can be — and is —
   imported directly by Vitest. See `logic.test.js`.
 - `logic.test.js` — real, passing tests (`pnpm test`) for everything in
   `logic.js`: input validation, the availability re-check, hash-based
-  idempotency comparison, and Postgres-error-code mapping.
+  idempotency comparison, Postgres-error-code mapping, and CORS
+  origin-allowlist resolution.
+- `deno.json` — declares the `@supabase/supabase-js` npm import as a bare
+  specifier (Deno 2's linter requires this over an inline `npm:` specifier).
+
+## Deno runtime verification done in this repo (Milestone 4C)
+
+Deno was installed locally and used to verify, without needing a live
+project:
+- `deno lint index.js logic.js` — clean.
+- `deno check index.js` — clean (imports/types resolve).
+
+**Not verified here** (needs a real Supabase project — no Docker/live
+project available in this environment): the function actually starting via
+`supabase functions serve`, environment variables being populated at
+runtime, and a real end-to-end HTTP request/response including the
+Supabase admin client and Storage upload. See the milestone report for the
+exact remaining verification steps.
 
 ## Deploy
 
 ```bash
 supabase functions deploy create-booking
 supabase secrets set SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+supabase secrets set ALLOWED_ORIGINS=https://emmanuellesingani.com,https://www.emmanuellesingani.com
 ```
 
 `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are also auto-provided in
 every Edge Function's environment by the Supabase platform itself — the
 explicit `supabase secrets set` above is only needed for local
-`functions serve`.
+`functions serve`. `ALLOWED_ORIGINS` is NOT auto-provided — set it once a
+production domain exists; local dev origins (`localhost:5173`/`4173`) are
+always allowed regardless (see `logic.js`'s `resolveAllowedOrigin`). There
+is no unrestricted `'*'` anywhere in this function.
 
 ## What this milestone does NOT do
 

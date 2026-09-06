@@ -13,7 +13,7 @@
 // supabase/functions/create-booking/logic.test.js, runnable under Vitest).
 // This file itself should be exercised via `supabase functions serve`
 // once a project exists.
-import { createClient } from 'npm:@supabase/supabase-js@2'
+import { createClient } from '@supabase/supabase-js'
 import {
   AppError,
   validateBookingPayload,
@@ -21,6 +21,7 @@ import {
   computeBookingWindow,
   hashPayload,
   mapDatabaseError,
+  resolveAllowedOrigin,
 } from './logic.js'
 
 // Business timezone, duplicated intentionally from src/config/business.js —
@@ -28,21 +29,30 @@ import {
 // that file for why this is a geographic fact, not a placeholder.
 const BUSINESS_TIMEZONE = 'America/New_York'
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+// CORS: the request's Origin is only ever reflected back if it's on the
+// allow-list (see resolveAllowedOrigin) — local dev origins are always
+// allowed; the production domain is added via the ALLOWED_ORIGINS secret
+// (comma-separated) once one exists:
+//   supabase secrets set ALLOWED_ORIGINS=https://emmanuellesingani.com
+// There is deliberately no unrestricted '*' anywhere in this file.
+function corsHeaders(requestOrigin) {
+  const allowOrigin = resolveAllowedOrigin(requestOrigin, Deno.env.get('ALLOWED_ORIGINS') ?? '')
+  return {
+    ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin, Vary: 'Origin' } : {}),
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
 }
 
-function jsonResponse(status, body) {
+function jsonResponse(status, body, cors) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    headers: { ...cors, 'Content-Type': 'application/json' },
   })
 }
 
-function errorResponse(status, code, message, details) {
-  return jsonResponse(status, { error: { code, message, details } })
+function errorResponse(status, code, message, details, cors) {
+  return jsonResponse(status, { error: { code, message, details } }, cors)
 }
 
 const ERROR_STATUS = {
@@ -79,11 +89,13 @@ function toPublicAppointment(row) {
 }
 
 Deno.serve(async (req) => {
+  const cors = corsHeaders(req.headers.get('Origin'))
+
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: CORS_HEADERS })
+    return new Response('ok', { headers: cors })
   }
   if (req.method !== 'POST') {
-    return errorResponse(405, 'INVALID_INPUT', 'Method not allowed')
+    return errorResponse(405, 'INVALID_INPUT', 'Method not allowed', undefined, cors)
   }
 
   const supabaseAdmin = createClient(Deno.env.get('SUPABASE_URL'), Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'), {
@@ -128,12 +140,14 @@ Deno.serve(async (req) => {
 
     if (existing) {
       if (existing.request_payload_hash === requestHash) {
-        return jsonResponse(200, toPublicAppointment(existing))
+        return jsonResponse(200, toPublicAppointment(existing), cors)
       }
       return errorResponse(
         ERROR_STATUS.DUPLICATE_REQUEST,
         'DUPLICATE_REQUEST',
-        'This request was already used for a different booking'
+        'This request was already used for a different booking',
+        undefined,
+        cors
       )
     }
 
@@ -223,18 +237,18 @@ Deno.serve(async (req) => {
           .select('id,status,service_id,appointment_date,start_time,end_time')
           .eq('idempotency_key', payload.idempotencyKey)
           .maybeSingle()
-        if (winner) return jsonResponse(200, toPublicAppointment(winner))
+        if (winner) return jsonResponse(200, toPublicAppointment(winner), cors)
         throw insertError
       }
       throw mapped
     }
 
-    return jsonResponse(201, { ...toPublicAppointment(inserted), photoWarning })
+    return jsonResponse(201, { ...toPublicAppointment(inserted), photoWarning }, cors)
   } catch (err) {
     if (err instanceof AppError) {
-      return errorResponse(ERROR_STATUS[err.code] ?? 500, err.code, err.message, err.details)
+      return errorResponse(ERROR_STATUS[err.code] ?? 500, err.code, err.message, err.details, cors)
     }
     console.error('create-booking internal error', err)
-    return errorResponse(500, 'INTERNAL_ERROR', 'Something went wrong. Please try again.')
+    return errorResponse(500, 'INTERNAL_ERROR', 'Something went wrong. Please try again.', undefined, cors)
   }
 })

@@ -7,6 +7,7 @@ import {
   hashPayload,
   mapDatabaseError,
   normalizeEmail,
+  resolveAllowedOrigin,
 } from './logic.js'
 
 // NOTE on test coverage: this file covers everything that's pure/testable
@@ -217,5 +218,29 @@ describe('mapDatabaseError', () => {
 describe('normalizeEmail', () => {
   it('trims and lowercases', () => {
     expect(normalizeEmail('  Jane@Example.COM  ')).toBe('jane@example.com')
+  })
+})
+
+describe('resolveAllowedOrigin', () => {
+  it('allows the default Vite dev origin with no configured extras', () => {
+    expect(resolveAllowedOrigin('http://localhost:5173', '')).toBe('http://localhost:5173')
+  })
+
+  it('rejects an unlisted origin', () => {
+    expect(resolveAllowedOrigin('https://evil.example.com', '')).toBeNull()
+  })
+
+  it('allows an origin from the configured (comma-separated) list', () => {
+    expect(
+      resolveAllowedOrigin('https://emmanuellesingani.com', 'https://emmanuellesingani.com,https://www.emmanuellesingani.com')
+    ).toBe('https://emmanuellesingani.com')
+  })
+
+  it('never returns a bare wildcard', () => {
+    expect(resolveAllowedOrigin('https://evil.example.com', '*')).toBeNull()
+  })
+
+  it('returns null when there is no Origin header at all', () => {
+    expect(resolveAllowedOrigin(null, 'https://emmanuellesingani.com')).toBeNull()
   })
 })

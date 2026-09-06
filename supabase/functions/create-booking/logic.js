@@ -182,6 +182,31 @@ export function normalizeEmail(email) {
   return email.trim().toLowerCase()
 }
 
+// Local dev origins that are always allowed, regardless of ALLOWED_ORIGINS.
+// 5173/4173 are Vite's default dev/preview ports.
+export const DEFAULT_DEV_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173']
+
+/**
+ * Decides what to send back as Access-Control-Allow-Origin — reflects the
+ * request's Origin header only if it's on the allow-list, and returns null
+ * otherwise (meaning: omit the header entirely, which browsers treat as a
+ * CORS rejection). Never returns a bare '*'.
+ *
+ * @param {string | null} requestOrigin - the incoming request's Origin header
+ * @param {string} [extraOriginsEnv] - comma-separated list, e.g. from the
+ *   ALLOWED_ORIGINS environment variable, for the production domain(s) —
+ *   configurable without a code change.
+ */
+export function resolveAllowedOrigin(requestOrigin, extraOriginsEnv = '') {
+  if (!requestOrigin) return null
+  const configured = extraOriginsEnv
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean)
+  const allowed = new Set([...DEFAULT_DEV_ORIGINS, ...configured])
+  return allowed.has(requestOrigin) ? requestOrigin : null
+}
+
 /**
  * Maps a Postgres error onto the app's error contract. Returning `null`
  * signals "this was the idempotency-key race" (23505 on the unique index)
