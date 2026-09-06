@@ -1,10 +1,12 @@
 import './App.css'
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
+import SelectedLooks from './components/SelectedLooks'
+import ServicesSection from './components/ServicesSection'
+import ArtistrySection from './components/ArtistrySection'
 import AboutSection from './components/AboutSection'
-import ProductsSection from './components/ProductsSection'
-import TestimonialsSection from './components/TestimonialsSection'
-import GallerySection from './components/GallerySection'
+import PoliciesSection from './components/PoliciesSection'
+import FinalCta from './components/FinalCta'
 import BookingSection from './components/BookingSection'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
@@ -15,10 +17,12 @@ function App() {
       <Header />
       <main>
         <HeroSection />
+        <SelectedLooks />
+        <ServicesSection />
+        <ArtistrySection />
         <AboutSection />
-        <ProductsSection />
-        <TestimonialsSection />
-        <GallerySection />
+        <PoliciesSection />
+        <FinalCta />
         <BookingSection />
         <ContactSection />
       </main>
