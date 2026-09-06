@@ -127,7 +127,41 @@ supabase secrets set GOOGLE_REFRESH_TOKEN=<token>
 supabase secrets set GOOGLE_CALENDAR_ID=<calendar-id-or-primary>
 ```
 
-## Live verification results
+## Live verification results — run 2026-09-06/07, project `emma-cosmetics-dev`
 
-_To be filled in once run — see the main milestone report for current
-status._
+Real Resend account, real Stripe test-mode payments, real webhook
+deliveries — not simulated.
+
+| Test | Result | Evidence |
+|---|---|---|
+| A. Real test transactional email sent | ✅ PASS | `booking_payment_pending` and `booking_confirmed` both delivered with real Resend message ids |
+| B. Verify receipt | ⚠️ Partial | Confirmed *accepted for delivery* by Resend (200 response + message id); actual inbox receipt not visually confirmed in this environment |
+| C. Provider message id stored | ✅ PASS | e.g. `157b54ca-2dd2-47e2-94d1-d5218ab34755` (payment_pending), `dd0dcb80-2c20-4620-a3df-2158ef3d31f9` (confirmed) |
+| D. Replay same event, no duplicate | ✅ PASS | Two ways: (1) calling `create-payment-intent` again for an already-emailed appointment left `notification_events` unchanged (same message id, no new send); (2) replaying the real `payment_intent.succeeded` Stripe event with a freshly-computed valid signature returned `{"received":true,"deduped":true}` before notification logic even ran |
+| E. Generate/download real .ics | ✅ PASS | Generated for the actual confirmed appointment's real data — see below |
+| F. Import .ics into a calendar, confirm time | ⚠️ Partial | Verified programmatically: `DTSTART:20300910T140000Z` for a 10:00 AM appointment on 2030-09-10 — correct, since Sept 10 2030 is Eastern *Daylight* Time (UTC-4), so 10:00 EDT = 14:00 UTC, exactly as computed. Actual visual import into a calendar app not performed (no GUI in this environment) |
+| G. Real Google Calendar test event | N/A | Skipped by choice — no Google credentials provided this milestone |
+| H. Replay webhook, no duplicate calendar event | N/A | Same reason as G |
+
+### Real bug caught during verification (not a bug — expected behavior)
+
+The first attempt used an email address that turned out not to be the
+Resend account's verified sandbox address. The system did exactly what it
+was built to do: recorded the send as `failed` with Resend's real error
+message, did **not** affect the booking/payment success, and correctly
+retried (and succeeded) once pointed at the right address — this
+incidentally doubled as a live test of the retry path (not explicitly
+listed as one of A–H, but directly demonstrates requirement #5's "store
+failed attempts and allow retry").
+
+### Payment_failed email
+
+Also verified live (not one of the A–H list, but directly required by
+section 2.C): a declined test card triggered a real `payment_failed`
+email with its own message id, independent of the `booking_payment_pending`
+email already sent for that appointment.
+
+### Cleanup
+
+All test appointments/customers/their notification rows (cascade-deleted
+with the appointment) were removed afterward. Seed data untouched.
