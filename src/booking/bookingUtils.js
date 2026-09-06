@@ -14,6 +14,12 @@ export function formatPrice(amount) {
   return `$${amount}`
 }
 
+/** Integer cents (as returned by create-payment-intent) -> "$37.50". */
+export function formatCents(cents) {
+  if (typeof cents !== 'number') return '—'
+  return `$${(cents / 100).toFixed(2)}`
+}
+
 export function formatDateLong(date) {
   if (!date) return ''
   const d = date instanceof Date ? date : new Date(date)

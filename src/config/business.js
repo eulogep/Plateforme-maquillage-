@@ -36,8 +36,12 @@ export const business = {
     facebook: 'https://www.facebook.com/profile.php?id=100008196917547',
   },
   // Deposit structure (fixed $ vs %) is explicitly unconfirmed in the design
-  // ("[DEPOSIT — fixed $ or % TBC]"). Left null on purpose — the booking
-  // flow (Milestone 3+) must not assume a value here.
+  // ("[DEPOSIT — fixed $ or % TBC]"). Left null on purpose — nothing in the
+  // client reads this to compute an amount. As of Milestone 5, the actual
+  // (still-unconfirmed, dev/test) deposit configuration and calculation
+  // live server-side only, in supabase/functions/_shared/depositConfig.js
+  // — the client only ever displays whatever amount create-payment-intent
+  // returns, never computes one itself.
   deposit: {
     type: null, // 'fixed' | 'percent'
     value: null,

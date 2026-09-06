@@ -15,6 +15,11 @@ const baseBookingData = {
   time: '',
   client: clientDetailsDefaultValues,
   policiesAccepted: false,
+  // Set once create-booking succeeds (see handleCreateBooking) — the
+  // Payment step needs this id to create a PaymentIntent, and
+  // Confirmation needs it to poll the real server-confirmed status.
+  appointmentId: null,
+  holdExpiresAt: null,
 }
 
 // A fresh idempotency key per mount (not baked into a shared module-level
@@ -25,24 +30,28 @@ function createInitialBookingData() {
 }
 
 // Top-level orchestrator for the 6-step booking flow. Holds all booking
-// state and hands each step only what it needs — no step reaches into
-// another step's concerns.
+// state and hands each step only what it needs.
 //
-// The only network call in this whole flow happens on the Payment step's
-// "Continue to confirmation" action (see handleSubmit below), which calls
-// the create-booking Edge Function — the sole place an appointment is ever
-// written (src/booking/bookingApi.js -> supabase/functions/create-booking).
+// Network calls, in order: Review's "Continue to payment" calls
+// create-booking (creates the appointment as 'pending' — see
+// handleCreateBooking); Payment then calls create-payment-intent itself
+// once it has an appointmentId, renders Stripe's Payment Element, and
+// calls onPaid once the client-side payment submission completes; from
+// there Confirmation POLLS the server for the real, webhook-confirmed
+// status (src/booking/bookingApi.js -> getBookingStatus) rather than ever
+// assuming success locally — only a verified Stripe webhook ever sets an
+// appointment to 'confirmed' (see supabase/functions/stripe-webhook).
 const BookingFlow = () => {
   const [stepIndex, setStepIndex] = useState(0)
   const [bookingData, setBookingData] = useState(createInitialBookingData)
-  const [submission, setSubmission] = useState({ status: 'idle', errorCode: null, errorMessage: null, result: null })
+  const [submission, setSubmission] = useState({ status: 'idle', errorCode: null, errorMessage: null })
 
   const goNext = () => setStepIndex((i) => Math.min(i + 1, bookingSteps.length - 1))
   const goBack = () => setStepIndex((i) => Math.max(i - 1, 0))
 
   const handleStartOver = () => {
     setBookingData(createInitialBookingData())
-    setSubmission({ status: 'idle', errorCode: null, errorMessage: null, result: null })
+    setSubmission({ status: 'idle', errorCode: null, errorMessage: null })
     setStepIndex(0)
   }
 
@@ -56,8 +65,8 @@ const BookingFlow = () => {
 
   const selectedService = getServiceById(bookingData.serviceId)
 
-  const handleSubmit = async () => {
-    setSubmission({ status: 'submitting', errorCode: null, errorMessage: null, result: null })
+  const handleCreateBooking = async () => {
+    setSubmission({ status: 'submitting', errorCode: null, errorMessage: null })
     try {
       const result = await submitBooking({
         payload: {
@@ -74,12 +83,13 @@ const BookingFlow = () => {
         },
         inspirationPhoto: bookingData.client.inspirationPhoto,
       })
-      setSubmission({ status: 'success', errorCode: null, errorMessage: null, result })
+      setSubmission({ status: 'idle', errorCode: null, errorMessage: null })
+      setBookingData((d) => ({ ...d, appointmentId: result.id, holdExpiresAt: result.holdExpiresAt ?? null }))
       goNext()
     } catch (err) {
       const code = err instanceof BookingApiError ? err.code : 'INTERNAL_ERROR'
       const message = err instanceof BookingApiError ? err.message : 'Something went wrong. Please try again.'
-      setSubmission({ status: 'error', errorCode: code, errorMessage: message, result: null })
+      setSubmission({ status: 'error', errorCode: code, errorMessage: message })
 
       // The slot we showed the user is no longer valid — send them back to
       // pick a new one rather than let them retry into the same wall.
@@ -146,22 +156,22 @@ const BookingFlow = () => {
             bookingData={bookingData}
             policiesAccepted={bookingData.policiesAccepted}
             onTogglePolicies={(policiesAccepted) => setBookingData((d) => ({ ...d, policiesAccepted }))}
+            submission={submission}
             onBack={goBack}
-            onContinue={goNext}
+            onContinue={handleCreateBooking}
           />
         )}
 
         {stepIndex === 4 && (
-          <PaymentStep
-            bookingData={bookingData}
-            submission={submission}
-            onBack={goBack}
-            onContinue={handleSubmit}
-          />
+          <PaymentStep bookingData={bookingData} onBack={goBack} onPaid={goNext} />
         )}
 
         {stepIndex === 5 && (
-          <ConfirmationStep bookingData={bookingData} result={submission.result} onStartOver={handleStartOver} />
+          <ConfirmationStep
+            bookingData={bookingData}
+            onStartOver={handleStartOver}
+            onRetryPayment={() => setStepIndex(4)}
+          />
         )}
       </div>
     </section>

@@ -5,12 +5,24 @@ import { StepHeader, StepFooter } from './StepChrome'
 
 // Step 4 — Review + Policies. The user must explicitly accept the booking
 // policies (checkbox) before continuing; Continue stays disabled otherwise.
-const ReviewStep = ({ bookingData, policiesAccepted, onTogglePolicies, onBack, onContinue }) => {
+// Continuing here is what actually calls create-booking (the appointment
+// is created as 'pending' at this point — no payment yet).
+const ReviewStep = ({ bookingData, policiesAccepted, onTogglePolicies, submission, onBack, onContinue }) => {
   const service = getServiceById(bookingData.serviceId)
+  const isSubmitting = submission?.status === 'submitting'
+  const showError =
+    submission?.status === 'error' &&
+    !['SLOT_UNAVAILABLE', 'BLOCKED_DATE', 'OUTSIDE_BUSINESS_HOURS'].includes(submission.errorCode)
 
   return (
     <div className="flex min-h-[70vh] flex-col gap-3.5 p-6 lg:p-7">
       <StepHeader stepIndex={3} title="Review your appointment" />
+
+      {showError && (
+        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+          {submission.errorMessage}
+        </p>
+      )}
 
       <div className="flex flex-col gap-2 border border-[#241F1B]/[.08] bg-brand-cream-soft p-4 text-[12.5px] text-[#4A3E35]">
         <Row label="Service" value={service?.name ?? '—'} />
@@ -43,8 +55,8 @@ const ReviewStep = ({ bookingData, policiesAccepted, onTogglePolicies, onBack, o
       <StepFooter
         onBack={onBack}
         onContinue={onContinue}
-        continueLabel="Continue to payment"
-        continueDisabled={!policiesAccepted}
+        continueLabel={isSubmitting ? 'Submitting…' : 'Continue to payment'}
+        continueDisabled={!policiesAccepted || isSubmitting}
       />
     </div>
   )

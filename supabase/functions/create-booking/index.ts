@@ -7,12 +7,8 @@
 // which is never exposed to the client (it's not a VITE_* variable and is
 // only ever read from Deno.env here).
 //
-// NOTE: this environment has no Deno runtime and no live Supabase project
-// connected, so this function has not been executed — only the pure logic
-// it depends on (./logic.js) has real test coverage (see
-// supabase/functions/create-booking/logic.test.js, runnable under Vitest).
-// This file itself should be exercised via `supabase functions serve`
-// once a project exists.
+// Deployed and live-tested against a real Supabase project as of
+// Milestone 4C — see INTEGRATION_TESTING.md.
 import { createClient } from '@supabase/supabase-js'
 import {
   AppError,
@@ -23,6 +19,7 @@ import {
   mapDatabaseError,
   resolveAllowedOrigin,
 } from './logic.js'
+import { expireStaleHolds, computeHoldExpiresAt, resolveHoldDurationMinutes } from '../_shared/holdLifecycle.js'
 
 // Business timezone, duplicated intentionally from src/config/business.js —
 // this Deno function can't import across the Vite "@/" alias boundary. See
@@ -85,6 +82,7 @@ function toPublicAppointment(row) {
     date: row.appointment_date,
     startTime: typeof row.start_time === 'string' ? row.start_time.slice(0, 5) : row.start_time,
     endTime: typeof row.end_time === 'string' ? row.end_time.slice(0, 5) : row.end_time,
+    holdExpiresAt: row.hold_expires_at ?? null,
   }
 }
 
@@ -128,12 +126,18 @@ Deno.serve(async (req) => {
 
     const requestHash = hashPayload(payload)
 
+    // --- Sweep any stale holds before checking availability, so a slot
+    //     abandoned by a previous unpaid attempt is actually free again
+    //     (see Milestone 5 — the exclusion constraint can't expire holds
+    //     on its own since its predicate can't reference now()). ---
+    await expireStaleHolds(supabaseAdmin)
+
     // --- 2. Idempotency: same key + same payload -> return the original
     //        result rather than creating a duplicate. Same key + different
     //        payload -> reject as a client bug. ---
     const { data: existing, error: existingError } = await supabaseAdmin
       .from('appointments')
-      .select('id,status,service_id,appointment_date,start_time,end_time,request_payload_hash')
+      .select('id,status,service_id,appointment_date,start_time,end_time,hold_expires_at,request_payload_hash')
       .eq('idempotency_key', payload.idempotencyKey)
       .maybeSingle()
     if (existingError) throw existingError
@@ -188,6 +192,8 @@ Deno.serve(async (req) => {
     //        object path is stored on the appointment. A failed upload
     //        does not block the booking. ---
     const appointmentId = crypto.randomUUID()
+    const holdDurationMinutes = resolveHoldDurationMinutes(Deno.env.get('HOLD_DURATION_MINUTES'))
+    const holdExpiresAt = computeHoldExpiresAt(new Date(), holdDurationMinutes)
     let inspirationPhotoPath = null
     let photoWarning
     if (photoFile && photoMeta) {
@@ -223,8 +229,9 @@ Deno.serve(async (req) => {
         idempotency_key: payload.idempotencyKey,
         request_payload_hash: requestHash,
         inspiration_photo_path: inspirationPhotoPath,
+        hold_expires_at: holdExpiresAt.toISOString(),
       })
-      .select('id,status,service_id,appointment_date,start_time,end_time')
+      .select('id,status,service_id,appointment_date,start_time,end_time,hold_expires_at')
       .single()
 
     if (insertError) {
@@ -234,7 +241,7 @@ Deno.serve(async (req) => {
         // earlier lookup before either inserted; whoever won is the result.
         const { data: winner } = await supabaseAdmin
           .from('appointments')
-          .select('id,status,service_id,appointment_date,start_time,end_time')
+          .select('id,status,service_id,appointment_date,start_time,end_time,hold_expires_at')
           .eq('idempotency_key', payload.idempotencyKey)
           .maybeSingle()
         if (winner) return jsonResponse(200, toPublicAppointment(winner), cors)
