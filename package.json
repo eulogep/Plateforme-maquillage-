@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "email:preview": "node supabase/functions/_shared/notifications/brand/preview.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

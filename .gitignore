@@ -10,4 +10,8 @@ build/
 supabase/.temp/
 supabase/.branches/
 
+# Generated local email-template previews (see brand/preview.mjs) —
+# regenerate anytime, never needs to be committed.
+supabase/functions/_shared/notifications/brand/.preview/
+
 
