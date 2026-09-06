@@ -4,7 +4,9 @@
 // times.
 import { bookingSteps } from '@/booking/bookingUtils'
 
-export const TOTAL_STEPS = bookingSteps.length
+// Not exported — this file exports components only, so Fast Refresh stays
+// happy (react-refresh/only-export-components).
+const TOTAL_STEPS = bookingSteps.length
 
 export function StepHeader({ stepIndex, title }) {
   return (
