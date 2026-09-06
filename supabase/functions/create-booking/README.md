@@ -6,50 +6,49 @@ variable.
 
 ## Files
 
-- `index.js` — the Deno entrypoint (HTTP handling, Supabase queries/writes,
-  Storage upload). Plain JS, not TypeScript (it was briefly named
-  `index.ts` with no type annotations — `deno check` correctly flagged
-  that as untyped, so it's named accurately now).
+- `index.ts` — the Deno entrypoint (HTTP handling, Supabase queries/writes,
+  Storage upload). Written in plain-JS style with no type annotations —
+  `supabase functions deploy` hardcodes `index.ts` as the entrypoint
+  filename (confirmed live; it does not fall back to `.js`), so it keeps
+  the `.ts` extension with `deno.json`'s `compilerOptions.strict: false`
+  rather than retrofitting types onto code that was never typed.
 - `logic.js` — pure, dependency-free validation/computation logic used by
-  `index.js`. Deliberately has zero imports (not even from `src/`, since
+  `index.ts`. Deliberately has zero imports (not even from `src/`, since
   Vite's `@/` alias doesn't exist under Deno) so it can be — and is —
   imported directly by Vitest. See `logic.test.js`.
 - `logic.test.js` — real, passing tests (`pnpm test`) for everything in
   `logic.js`: input validation, the availability re-check, hash-based
   idempotency comparison, Postgres-error-code mapping, and CORS
   origin-allowlist resolution.
-- `deno.json` — declares the `@supabase/supabase-js` npm import as a bare
-  specifier (Deno 2's linter requires this over an inline `npm:` specifier).
+- `deno.json` / `deno.lock` — declares the `@supabase/supabase-js` npm
+  import as a bare specifier (Deno 2's linter requires this over an inline
+  `npm:` specifier) and pins its resolved version.
 
-## Deno runtime verification done in this repo (Milestone 4C)
+## Verification status (Milestone 4C)
 
-Deno was installed locally and used to verify, without needing a live
-project:
-- `deno lint index.js logic.js` — clean.
-- `deno check index.js` — clean (imports/types resolve).
-
-**Not verified here** (needs a real Supabase project — no Docker/live
-project available in this environment): the function actually starting via
-`supabase functions serve`, environment variables being populated at
-runtime, and a real end-to-end HTTP request/response including the
-Supabase admin client and Storage upload. See the milestone report for the
-exact remaining verification steps.
+**Deployed and live-tested against a real Supabase project**
+(`emma-cosmetics-dev`) — see `INTEGRATION_TESTING.md` for the full results:
+every required test (successful booking, exact boundary, overlap
+rejection, true concurrency, idempotency replay/mismatch, customer dedup,
+private photo upload, and every failure case) passed for real, verified
+against the live database. `deno lint`/`deno check` are also clean.
 
 ## Deploy
 
 ```bash
 supabase functions deploy create-booking
-supabase secrets set SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
 supabase secrets set ALLOWED_ORIGINS=https://emmanuellesingani.com,https://www.emmanuellesingani.com
 ```
 
-`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are also auto-provided in
-every Edge Function's environment by the Supabase platform itself — the
-explicit `supabase secrets set` above is only needed for local
-`functions serve`. `ALLOWED_ORIGINS` is NOT auto-provided — set it once a
-production domain exists; local dev origins (`localhost:5173`/`4173`) are
-always allowed regardless (see `logic.js`'s `resolveAllowedOrigin`). There
-is no unrestricted `'*'` anywhere in this function.
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are auto-provided in every
+Edge Function's environment by the Supabase platform — confirmed live that
+the CLI actively rejects trying to set either yourself
+(`supabase secrets set SUPABASE_SERVICE_ROLE_KEY=...` errors with "Env name
+cannot start with SUPABASE_"). `ALLOWED_ORIGINS` is NOT auto-provided — set
+it once a production domain exists; local dev origins
+(`localhost:5173`/`4173`) are always allowed regardless (see `logic.js`'s
+`resolveAllowedOrigin`). There is no unrestricted `'*'` anywhere in this
+function.
 
 ## What this milestone does NOT do
 

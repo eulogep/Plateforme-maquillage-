@@ -1,10 +1,67 @@
 # Live integration test runbook (Milestone 4C)
 
-**Status: not yet run.** This environment has no Docker and no live
-Supabase project connected, so none of the tests below have been executed
-— this is the exact runbook to execute once a real project exists (either
-by the developer, or by an agent given real project credentials). Every
-`curl` command is copy-pasteable once the placeholders are filled in.
+## Results — run 2026-09-06, project `emma-cosmetics-dev` (`wfbetbaojjlsrwsylcuc`, eu-central-1)
+
+All 9 migrations applied via `supabase db push` with zero errors, `seed.sql`
+loaded, `create-booking` deployed, `ALLOWED_ORIGINS` secret set. Every test
+below was run for real against the live deployed function and verified
+against the live database (via the Supabase Management API's SQL query
+endpoint) — not simulated.
+
+| Test | Result | Evidence |
+|---|---|---|
+| Deno runtime (lint/check/deploy) | ✅ PASS | see "Deno/deploy findings" below |
+| CORS allow-list | ✅ PASS | `localhost:5173` origin reflected; `evil.example.com` got no CORS header at all |
+| A. Successful booking | ✅ PASS | `201`, `{"id":"5058eb4c-...","status":"pending",...}`; row confirmed in DB |
+| B. Exact boundary | ✅ PASS | 11:00 (inside 15min buffer) → `409 SLOT_UNAVAILABLE`; 11:15 (exactly at buffer edge) → `201` |
+| C. Overlapping booking | ✅ PASS | 10:30 overlapping an existing 10:00–11:00 appt → `409 SLOT_UNAVAILABLE` |
+| D. True concurrency | ✅ PASS | two backgrounded parallel requests for the same slot: one `201`, one `409 SLOT_UNAVAILABLE`; `select count(*) ... = 1` confirmed |
+| E. Idempotency (replay) | ✅ PASS | same key+payload twice → `201` then `200`, identical `id`; DB confirms 1 row |
+| E. Idempotency (mismatch) | ✅ PASS | same key, different payload → `409 DUPLICATE_REQUEST` |
+| F. Customer dedup | ✅ PASS | two bookings, same email (different case/whitespace) → `select count(*) from customers where normalized_email=... = 1`, latest name/phone kept |
+| G. Inspiration photo | ✅ PASS | `201` with a real photo attached; `inspiration_photo_path` stored; file confirmed to exist via service-role access (`200`) and confirmed NOT readable via public or anon-authenticated paths (`400`/`400`) |
+| H. Invalid service | ✅ PASS | `422 INVALID_SERVICE` |
+| H. Outside business hours (before open) | ✅ PASS | `422 OUTSIDE_BUSINESS_HOURS` |
+| H. Closed weekday (Sunday) | ✅ PASS | `422 OUTSIDE_BUSINESS_HOURS` ("Closed on the selected date") |
+| H. Blocked date | ✅ PASS | (test row inserted into `blocked_dates`) → `422 BLOCKED_DATE` |
+| H. Malformed payload (bad email) | ✅ PASS | `422 INVALID_INPUT` |
+| H. Invalid photo type (.pdf) | ✅ PASS | `422 INVALID_INPUT` |
+| H. Oversized photo (9MB) | ✅ PASS | `422 INVALID_INPUT` |
+
+**Every required test passed.** No schema or function logic changes were
+needed as a result of live testing — only tooling/deploy-convention fixes
+(below).
+
+### Deno/deploy findings (fixed, both real)
+
+1. `deno check` correctly flagged the original `index.ts` as untyped plain
+   JS with an implicit-any strictness error — it had never actually been
+   typed. Renamed to `index.js`... which then turned out to be wrong for a
+   different reason:
+2. **`supabase functions deploy` hardcodes `index.ts` as the entrypoint
+   filename** — it does not fall back to `index.js`, despite Deno itself
+   running plain JS fine. First deploy attempt failed with
+   `Entrypoint path does not exist`. Fixed by renaming back to `index.ts`
+   and relaxing `deno.json`'s `compilerOptions.strict` to `false` (the file
+   is deliberately plain-JS-style; this documents that rather than
+   retrofitting types onto it).
+3. Confirmed live: `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are
+   reserved secret names — `supabase secrets set SUPABASE_SERVICE_ROLE_KEY=...`
+   is rejected client-side by the CLI ("Env name cannot start with
+   SUPABASE_"), and `supabase secrets list` shows both already present and
+   populated automatically, exactly as documented before this was ever
+   tested live.
+4. Test data from this run (future-dated appointments/customers, one
+   `blocked_dates` test row) remains in the dev project — it's clearly a
+   `-dev` project and harmless, but flagged here in case a clean slate is
+   wanted before further work.
+
+---
+
+## Runbook (for future re-runs)
+
+Every `curl` command below is copy-pasteable once the placeholders are
+filled in — this is what was actually executed for the results above.
 
 ## Prerequisites
 
@@ -14,11 +71,15 @@ export SUPABASE_ANON_KEY=<anon-key>
 ```
 
 ```bash
+export SUPABASE_ACCESS_TOKEN=<personal-access-token>   # from Account -> Access Tokens
 supabase link --project-ref <project-ref>
 supabase db push                       # applies all migrations in order
-supabase db execute -f supabase/seed.sql   # optional: placeholder services/hours
+supabase db push --include-seed        # optional: loads seed.sql's placeholder data
 supabase functions deploy create-booking
-supabase secrets set SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+supabase secrets set ALLOWED_ORIGINS=https://your-production-domain.com
+# Do NOT set SUPABASE_SERVICE_ROLE_KEY / SUPABASE_URL yourself — confirmed
+# live that the CLI rejects any secret name starting with SUPABASE_, and
+# both are already auto-populated by the platform (`supabase secrets list`).
 ```
 
 A small helper, since every request needs the same auth headers and a
