@@ -1,24 +1,26 @@
-// Dark "Artistry / Signature" band. The frozen design explicitly marks this
-// section's visual as unresolved — "macro brush + pigment photography —
-// asset needed" — so no photo is used here; that placeholder note is
-// rendered verbatim rather than substituted with a stand-in image.
+// Dark "Artistry / Signature" band. The frozen design calls for a macro
+// brush/pigment photograph here but marks that asset as not yet supplied —
+// design-reference/uploads/ was checked and contains no matching macro
+// photography, so per instructions no photo is invented for this slot.
+// Instead the panel stays visually complete using the same ink/blush/gold
+// blurred-accent treatment already established in Hero and Final CTA,
+// with no internal design annotation exposed to visitors.
 const ArtistrySection = () => {
   return (
     <section className="relative flex flex-col overflow-hidden bg-brand-ink font-brand-ui lg:min-h-[340px] lg:flex-row">
       <div className="relative min-h-[200px] overflow-hidden bg-[#171310] lg:w-2/5">
         <div
-          className="absolute h-[200px] w-[200px] rounded-full opacity-70"
+          className="absolute h-[220px] w-[220px] rounded-full opacity-70"
           style={{ background: '#9B2F6B', filter: 'blur(70px)', top: '10%', left: '10%' }}
         />
         <div
-          className="absolute h-[160px] w-[160px] rounded-full opacity-50"
+          className="absolute h-[180px] w-[180px] rounded-full opacity-50"
           style={{ background: '#B08D57', filter: 'blur(70px)', bottom: '5%', right: '15%' }}
         />
-        <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
-          <div className="relative z-[1] font-mono text-[10.5px] text-brand-blush">
-            macro brush + pigment photography — asset needed
-          </div>
-        </div>
+        <div
+          className="absolute h-[140px] w-[140px] rounded-full opacity-40"
+          style={{ background: '#D9A0BE', filter: 'blur(60px)', top: '45%', left: '55%' }}
+        />
       </div>
       <div className="flex flex-col items-center gap-4 px-6 py-14 text-center lg:w-3/5 lg:px-16 lg:py-0">
         <div className="text-[11px] tracking-[.16em] text-brand-gold uppercase">Precision, up close</div>
