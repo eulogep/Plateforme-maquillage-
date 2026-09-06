@@ -14,7 +14,16 @@ import { StepHeader, StepFooter } from './StepChrome'
 // (react-day-picker's `disabled` matcher can't be async) while still being
 // backed by real data. Time slots for the chosen date are fetched async, as
 // before.
-const DateTimeStep = ({ serviceDuration, date, time, onChangeDate, onChangeTime, onBack, onContinue }) => {
+const DateTimeStep = ({
+  serviceDuration,
+  date,
+  time,
+  slotUnavailableNotice,
+  onChangeDate,
+  onChangeTime,
+  onBack,
+  onContinue,
+}) => {
   const [context, setContext] = useState(null)
   const [loadingContext, setLoadingContext] = useState(true)
   const [slots, setSlots] = useState([])
@@ -59,6 +68,12 @@ const DateTimeStep = ({ serviceDuration, date, time, onChangeDate, onChangeTime,
   return (
     <div className="flex min-h-[70vh] flex-col gap-4 p-6 lg:p-7">
       <StepHeader stepIndex={1} title="When works for you?" />
+
+      {slotUnavailableNotice && (
+        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+          {slotUnavailableNotice}
+        </p>
+      )}
 
       <div className="flex justify-center">
         {loadingContext ? (

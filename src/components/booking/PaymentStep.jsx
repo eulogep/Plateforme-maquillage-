@@ -4,15 +4,27 @@ import { StepHeader, StepFooter } from './StepChrome'
 
 const PAYMENT_METHODS = ['Zelle', 'Cash App', 'Apple Pay', 'Google Pay', 'Card', 'PayPal', 'Cash']
 
-// Step 5 — Payment. UI only: no payment processor is connected yet, so every
-// method is shown as unavailable and Continue never implies a charge was
-// made.
-const PaymentStep = ({ bookingData, onBack, onContinue }) => {
+// Step 5 — Payment. No payment processor is connected yet, so every method
+// is shown as unavailable and Continue never implies a charge was made.
+// Continuing here is what actually submits the booking request to the
+// server (see BookingFlow.handleSubmit) — everything up to this point has
+// been local state only.
+const PaymentStep = ({ bookingData, submission, onBack, onContinue }) => {
   const service = getServiceById(bookingData.serviceId)
+  const isSubmitting = submission?.status === 'submitting'
+  const showGenericError =
+    submission?.status === 'error' &&
+    !['SLOT_UNAVAILABLE', 'BLOCKED_DATE', 'OUTSIDE_BUSINESS_HOURS'].includes(submission.errorCode)
 
   return (
     <div className="flex min-h-[70vh] flex-col gap-3.5 p-6 lg:p-7">
       <StepHeader stepIndex={4} title="Secure your slot" />
+
+      {showGenericError && (
+        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+          {submission.errorMessage}
+        </p>
+      )}
 
       <div className="flex flex-col gap-2 border border-[#241F1B]/[.08] bg-brand-cream-soft p-4 text-[12.5px] text-[#4A3E35]">
         <div className="flex justify-between">
@@ -45,7 +57,8 @@ const PaymentStep = ({ bookingData, onBack, onContinue }) => {
       <StepFooter
         onBack={onBack}
         onContinue={onContinue}
-        continueLabel="Continue to confirmation"
+        continueLabel={isSubmitting ? 'Submitting…' : 'Continue to confirmation'}
+        continueDisabled={isSubmitting}
         note="🔒 No payment method is connected yet — nothing will be charged."
       />
     </div>

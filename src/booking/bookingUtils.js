@@ -1,7 +1,8 @@
 // Pure helper functions for the booking flow. Business data (services,
 // pricing, deposit) is read from src/config/business.js, never duplicated
 // here.
-import { services, addOnServices } from '@/config/business'
+import { formatInTimeZone } from 'date-fns-tz'
+import { services, addOnServices, business } from '@/config/business'
 
 const allServices = [...services, ...addOnServices]
 
@@ -37,14 +38,12 @@ export function parseDurationMinutes(durationLabel) {
 }
 
 /**
- * This is a client-side reference id for display only — it is NOT a
- * persisted booking id. No appointment is saved anywhere yet (Milestone 3
- * is UI-only); a real id will come from the server once booking
- * confirmation is backed by Supabase.
+ * "YYYY-MM-DD" in the business timezone — what the create-booking Edge
+ * Function expects for `date`. Never the browser's local timezone.
  */
-export function generateMockBookingReference() {
-  const random = Math.random().toString(36).slice(2, 8).toUpperCase()
-  return `PREVIEW-${random}`
+export function formatDateKeyInBusinessTimezone(date) {
+  if (!date) return ''
+  return formatInTimeZone(date, business.location.timezone, 'yyyy-MM-dd')
 }
 
 export const bookingSteps = [
