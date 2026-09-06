@@ -1,13 +1,14 @@
-// Mock availability data + queries for the booking flow (Milestone 3 —
-// booking UI only, no backend yet).
+// Mock availability data + queries — the fallback used when Supabase isn't
+// configured (see src/booking/availability.js), and the data source for
+// local development without a Supabase project.
 //
-// IMPORTANT: everything in this file is placeholder/test data for building
-// and validating the UI. None of it reflects Emmanuelle's real business
-// hours, blocked dates, or existing appointments — those are not yet
-// confirmed (see src/config/business.js). Every exported query function is
-// async and returns data shaped the way a real Supabase-backed version
-// would, specifically so the UI layer doesn't need to change when this file
-// is swapped for real queries in a later milestone.
+// IMPORTANT: everything in this file is placeholder/test data. None of it
+// reflects Emmanuelle's real business hours, blocked dates, or existing
+// appointments — those are not yet confirmed (see src/config/business.js).
+// Function signatures intentionally match src/booking/availability.js so
+// DateTimeStep.jsx can't tell which one it's talking to.
+
+import { computeAvailableSlots, timeToMinutes } from './slotMath'
 
 // Mon–Sat, 9am–6pm; closed Sundays. Placeholder only.
 const MOCK_BUSINESS_HOURS = {
@@ -32,19 +33,8 @@ const MOCK_EXISTING_APPOINTMENTS = [
 const SLOT_INTERVAL_MINUTES = 30
 const BUFFER_MINUTES = 15
 // Simulated network latency so the UI already handles an async/loading
-// state the way it will need to once this is backed by a real API.
+// state the way it needs to for the real Supabase-backed version.
 const MOCK_LATENCY_MS = 350
-
-function toMinutes(hhmm) {
-  const [h, m] = hhmm.split(':').map(Number)
-  return h * 60 + m
-}
-
-function toHHMM(totalMinutes) {
-  const h = Math.floor(totalMinutes / 60)
-  const m = totalMinutes % 60
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-}
 
 function dateKey(date) {
   const d = date instanceof Date ? date : new Date(date)
@@ -56,8 +46,9 @@ function delay(ms) {
 }
 
 /**
- * Synchronous day-level check used to disable calendar days. Real business
- * hours are unconfirmed — see the placeholder note above.
+ * Synchronous day-level check. Used as the fallback behind
+ * loadAvailabilityContext() in availability.js, and directly by anything
+ * that hasn't migrated (kept for backwards compatibility).
  */
 export function isDateAvailableSync(date) {
   const d = date instanceof Date ? date : new Date(date)
@@ -68,20 +59,11 @@ export function isDateAvailableSync(date) {
   return MOCK_BUSINESS_HOURS[d.getDay()] !== null
 }
 
-/**
- * Async wrapper kept for parity with what a real availability check will
- * look like once it has to hit a server.
- */
 export async function isDateAvailable(date) {
   await delay(MOCK_LATENCY_MS)
   return isDateAvailableSync(date)
 }
 
-/**
- * Returns the bookable time slots for a given date + service duration,
- * accounting for business hours, a buffer between appointments, and
- * existing (mock) appointments. Past times on the current day are excluded.
- */
 export async function getAvailableTimeSlots(date, serviceDurationMinutes) {
   await delay(MOCK_LATENCY_MS)
 
@@ -89,31 +71,41 @@ export async function getAvailableTimeSlots(date, serviceDurationMinutes) {
   const hours = MOCK_BUSINESS_HOURS[d.getDay()]
   if (!hours || MOCK_BLOCKED_DATES.has(dateKey(d))) return []
 
-  const openMin = toMinutes(hours.open)
-  const closeMin = toMinutes(hours.close)
   const key = dateKey(d)
-
-  const bookedRanges = MOCK_EXISTING_APPOINTMENTS.filter((a) => a.date === key).map((a) => {
-    const start = toMinutes(a.time)
-    return { start, end: start + a.durationMinutes + BUFFER_MINUTES }
+  const busyRanges = MOCK_EXISTING_APPOINTMENTS.filter((a) => a.date === key).map((a) => {
+    const start = timeToMinutes(a.time)
+    return { start, end: start + a.durationMinutes }
   })
 
   const now = new Date()
   const isToday = dateKey(now) === key
-  const nowMin = now.getHours() * 60 + now.getMinutes()
 
-  const slots = []
-  for (let start = openMin; start + serviceDurationMinutes <= closeMin; start += SLOT_INTERVAL_MINUTES) {
-    const end = start + serviceDurationMinutes
-    if (isToday && start <= nowMin) continue
+  return computeAvailableSlots({
+    openTime: hours.open,
+    closeTime: hours.close,
+    durationMinutes: serviceDurationMinutes,
+    bufferMinutes: BUFFER_MINUTES,
+    busyRanges,
+    slotIntervalMinutes: SLOT_INTERVAL_MINUTES,
+    isToday,
+    nowMinutes: now.getHours() * 60 + now.getMinutes(),
+  })
+}
 
-    const overlapsExisting = bookedRanges.some((r) => start < r.end && end > r.start)
-    if (overlapsExisting) continue
-
-    slots.push(toHHMM(start))
+/**
+ * Returns the same rules/blocked-dates shape availability.js builds from
+ * Supabase, so DateTimeStep can use one code path regardless of which
+ * backend is active.
+ */
+export async function loadAvailabilityContext() {
+  await delay(MOCK_LATENCY_MS)
+  const rulesByWeekday = {}
+  for (const [weekday, hours] of Object.entries(MOCK_BUSINESS_HOURS)) {
+    rulesByWeekday[Number(weekday)] = hours
+      ? { isClosed: false, open: hours.open, close: hours.close, bufferMinutes: BUFFER_MINUTES }
+      : { isClosed: true }
   }
-
-  return slots
+  return { rulesByWeekday, blockedDates: MOCK_BLOCKED_DATES }
 }
 
 export const bookingConstants = {

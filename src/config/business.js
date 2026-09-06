@@ -20,6 +20,11 @@ export const business = {
     zip: '22554',
     full: '60 Susa Dr, Suite 121, Stafford, VA 22554',
     areaServed: 'Fredericksburg & the DMV',
+    // Stafford, VA is unambiguously in the US Eastern time zone — this is a
+    // geographic fact, not an unconfirmed business preference, so it's set
+    // explicitly here rather than left as a placeholder. All availability
+    // computation must use this, never the visitor's browser time zone.
+    timezone: 'America/New_York',
   },
   contact: {
     email: 'emmanuellesingani23@gmail.com',
