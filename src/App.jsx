@@ -8,7 +8,6 @@ import AboutSection from './components/AboutSection'
 import PoliciesSection from './components/PoliciesSection'
 import FinalCta from './components/FinalCta'
 import BookingFlow from './components/booking/BookingFlow'
-import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
 
 function App() {
@@ -24,7 +23,6 @@ function App() {
         <PoliciesSection />
         <FinalCta />
         <BookingFlow />
-        <ContactSection />
       </main>
       <Footer />
     </div>

@@ -54,8 +54,9 @@ const Footer = () => {
             ))}
           </div>
 
-          {/* Contact */}
-          <div className="flex flex-col gap-2 text-[12px] text-brand-on-dark-muted">
+          {/* Contact — target of the header's #contact nav link now that
+              the standalone ContactSection is gone. */}
+          <div id="contact" className="flex flex-col gap-2 text-[12px] text-brand-on-dark-muted">
             <span className="mb-1 text-[10px] tracking-[.14em] text-brand-champagne uppercase">
               Contact
             </span>
