@@ -33,8 +33,9 @@ export const business = {
   },
   contact: {
     email: 'emmanuellesingani23@gmail.com',
-    // The design itself marks this "[PHONE TO BE CONFIRMED]" — do not invent a number.
-    phone: null,
+    // Confirmed by Emmanuelle. Stored E.164 (+1 US); components format it
+    // for display and build the tel: link from this value.
+    phone: '+15712669829',
   },
   social: {
     instagram: ['https://www.instagram.com/emma_sing84', 'https://www.instagram.com/emma_sing2'],
@@ -52,6 +53,17 @@ export const business = {
     value: null,
     note: 'Deposit amount/structure pending confirmation with Emmanuelle.',
   },
+}
+
+// Formats business.contact.phone (stored E.164, e.g. "+15712669829") as a
+// familiar US display string: "(571) 266-9829". Returns null unchanged if
+// no number is set, so callers can keep using the existing
+// "not yet confirmed" branch without a separate null check.
+export function formatBusinessPhone(e164) {
+  if (!e164) return null
+  const digits = e164.replace(/\D/g, '').replace(/^1/, '')
+  if (digits.length !== 10) return e164
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
 }
 
 // Primary services shown as image-led cards. Prices are explicitly called

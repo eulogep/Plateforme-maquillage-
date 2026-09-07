@@ -1,6 +1,6 @@
 import { Instagram, Facebook, Mail } from 'lucide-react'
 import { logoLockupOnDark, LOCKUP_ALT } from '@/assets/brand'
-import { business } from '@/config/business'
+import { business, formatBusinessPhone } from '@/config/business'
 
 // Content below follows the approved Claude Design homepage footer exactly
 // where it specifies real values (navigation labels, service names, address,
@@ -67,7 +67,16 @@ const Footer = () => {
             >
               {business.contact.email}
             </a>
-            <span className="text-brand-taupe italic">Phone — to be confirmed</span>
+            {business.contact.phone ? (
+              <a
+                href={`tel:${business.contact.phone}`}
+                className="link-underline text-brand-on-dark-muted hover:text-brand-champagne"
+              >
+                {formatBusinessPhone(business.contact.phone)}
+              </a>
+            ) : (
+              <span className="text-brand-taupe italic">Phone — to be confirmed</span>
+            )}
             <div className="mt-2 flex gap-4">
               <a
                 href={business.social.instagram[0]}

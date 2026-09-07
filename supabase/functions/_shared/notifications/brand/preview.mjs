@@ -23,7 +23,7 @@ const baseCtx = {
   businessName: 'Makeup-by Emma',
   locationLine: '60 Susa Dr, Suite 121, Stafford, VA 22554',
   contactEmail: 'emmanuellesingani23@gmail.com',
-  contactPhone: null,
+  contactPhone: '+15712669829', // real, confirmed
   customerName: 'Jane Doe',
   serviceName: 'Soft Glam',
   dateLabel: 'Aug 13, 2030',

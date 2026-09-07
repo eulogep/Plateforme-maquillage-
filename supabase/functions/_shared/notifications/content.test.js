@@ -62,8 +62,14 @@ describe('buildEmailContent', () => {
   })
 
   it('includes the phone line when contactPhone is actually provided', () => {
-    const { text } = buildEmailContent('booking_confirmed', { ...baseCtx, contactPhone: '555-123-4567' })
-    expect(text).toContain('555-123-4567')
+    const { text } = buildEmailContent('booking_confirmed', { ...baseCtx, contactPhone: '+15712669829' })
+    expect(text).toContain('(571) 266-9829')
+  })
+
+  it('renders a clickable tel: link in the html version', () => {
+    const { html } = buildEmailContent('booking_confirmed', { ...baseCtx, contactPhone: '+15712669829' })
+    expect(html).toContain('href="tel:+15712669829"')
+    expect(html).toContain('(571) 266-9829')
   })
 
   it('omits remaining balance line when not provided (e.g. full_payment deposit)', () => {

@@ -15,6 +15,7 @@
 // appears on ivory — as hairline rules and card borders, where contrast
 // ratios don't apply because it carries no text.
 import { brand } from './tokens.js'
+import { formatPhoneLabel } from '../../formatting.js'
 
 const { colors, fonts, logo, social } = brand
 
@@ -213,6 +214,7 @@ export function preparationNote(text) {
  * Opened by the same thin gold rule that closes the header.
  */
 export function footer({ businessName, locationLine, contactEmail, contactPhone }) {
+  const phoneLabel = formatPhoneLabel(contactPhone)
   return `
   <tr>
     <td style="background:${colors.goldDeep};font-size:0;line-height:0;height:1px;">&nbsp;</td>
@@ -225,7 +227,9 @@ export function footer({ businessName, locationLine, contactEmail, contactPhone 
       <div style="font-family:${fonts.body};font-size:11.5px;line-height:1.7;color:${colors.onDarkText};">
         ${esc(locationLine)}<br/>
         ${contactEmail ? `<a href="mailto:${esc(contactEmail)}" style="color:${colors.onDarkText};text-decoration:underline;">${esc(contactEmail)}</a>` : ''}${
-    contactPhone ? ` &middot; ${esc(contactPhone)}` : ''
+    contactPhone
+      ? ` &middot; <a href="tel:${esc(contactPhone)}" style="color:${colors.onDarkText};text-decoration:underline;">${esc(phoneLabel)}</a>`
+      : ''
   }
       </div>
       <div style="margin-top:14px;">

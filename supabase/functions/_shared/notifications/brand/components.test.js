@@ -116,9 +116,10 @@ describe('footer', () => {
     expect(html).not.toMatch(/&middot;\s*$/)
   })
 
-  it('includes the phone when provided', () => {
-    const html = footer({ businessName: 'X', locationLine: 'Y', contactEmail: 'e@x.com', contactPhone: '555-123-4567' })
-    expect(html).toContain('555-123-4567')
+  it('includes the phone when provided, as a clickable tel: link', () => {
+    const html = footer({ businessName: 'X', locationLine: 'Y', contactEmail: 'e@x.com', contactPhone: '+15712669829' })
+    expect(html).toContain('href="tel:+15712669829"')
+    expect(html).toContain('(571) 266-9829')
   })
 
   it('includes the Instagram link', () => {

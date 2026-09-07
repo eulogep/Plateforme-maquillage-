@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDateLabel, formatTimeLabel } from './formatting.js'
+import { formatDateLabel, formatTimeLabel, formatPhoneLabel } from './formatting.js'
 
 describe('formatDateLabel', () => {
   it('formats a date string as "Mon D, YYYY"', () => {
@@ -24,5 +24,20 @@ describe('formatTimeLabel', () => {
   it('formats noon and midnight correctly', () => {
     expect(formatTimeLabel('12:00')).toBe('12:00 PM')
     expect(formatTimeLabel('00:00')).toBe('12:00 AM')
+  })
+})
+
+describe('formatPhoneLabel', () => {
+  it('formats an E.164 US number for display', () => {
+    expect(formatPhoneLabel('+15712669829')).toBe('(571) 266-9829')
+  })
+
+  it('passes through null/undefined unchanged', () => {
+    expect(formatPhoneLabel(null)).toBe(null)
+    expect(formatPhoneLabel(undefined)).toBe(undefined)
+  })
+
+  it('returns non-10-digit input unchanged rather than mangling it', () => {
+    expect(formatPhoneLabel('12345')).toBe('12345')
   })
 })

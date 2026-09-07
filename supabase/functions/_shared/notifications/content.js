@@ -4,6 +4,8 @@
 // (e.g. contactPhone, remainingBalanceCents) are omitted from the output
 // entirely when absent, rather than rendered as a broken/blank line.
 
+import { formatPhoneLabel } from '../formatting.js'
+
 export class NotificationContentError extends Error {}
 
 function money(cents) {
@@ -43,10 +45,11 @@ function baseContext(ctx) {
 }
 
 function footer(ctx) {
+  const phoneLabel = formatPhoneLabel(ctx.contactPhone)
   return {
-    text: `\n${ctx.locationLine}\nQuestions? ${ctx.contactEmail}${ctx.contactPhone ? ' · ' + ctx.contactPhone : ''}\n`,
+    text: `\n${ctx.locationLine}\nQuestions? ${ctx.contactEmail}${ctx.contactPhone ? ' · ' + phoneLabel : ''}\n`,
     html: `<p style="margin-top:20px;color:#8A7A6C;font-size:12px">${ctx.locationLine}<br>Questions? ${ctx.contactEmail}${
-      ctx.contactPhone ? ' · ' + ctx.contactPhone : ''
+      ctx.contactPhone ? ` · <a href="tel:${ctx.contactPhone}" style="color:#8A7A6C">${phoneLabel}</a>` : ''
     }</p>`,
   }
 }

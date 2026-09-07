@@ -19,3 +19,12 @@ export function formatTimeLabel(hhmm) {
   const hour12 = h % 12 === 0 ? 12 : h % 12
   return `${hour12}:${String(m).padStart(2, '0')} ${period}`
 }
+
+/** "+15712669829" -> "(571) 266-9829". Returns the input unchanged if it
+ * isn't a recognizable 10-digit US number, rather than mangling it. */
+export function formatPhoneLabel(e164) {
+  if (!e164) return e164
+  const digits = e164.replace(/\D/g, '').replace(/^1/, '')
+  if (digits.length !== 10) return e164
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+}
