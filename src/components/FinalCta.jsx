@@ -1,18 +1,26 @@
-// Closing call-to-action band matching the frozen design.
+import { logoLockupOnDark, LOCKUP_ALT } from '@/assets/brand'
+
+// Closing call-to-action band. Deep black ground, the full official lockup,
+// an elegant serif statement and a single champagne CTA — no decoration
+// beyond one hairline rule.
 const FinalCta = () => {
   return (
-    <section className="relative flex min-h-[220px] flex-col items-center justify-center gap-3 overflow-hidden bg-brand-navy px-6 py-14 text-center font-brand-ui lg:px-14">
-      <div
-        className="absolute h-[260px] w-[260px] rounded-full opacity-40"
-        style={{ background: '#9B2F6B', filter: 'blur(90px)', bottom: '-80px', right: '5%' }}
+    <section className="flex flex-col items-center justify-center gap-5 bg-brand-black px-6 py-16 text-center font-brand-ui lg:px-14 lg:py-20">
+      <img
+        src={logoLockupOnDark}
+        alt={LOCKUP_ALT}
+        width="2172"
+        height="724"
+        className="h-auto w-[220px] max-w-full lg:w-[260px]"
       />
-      <h2 className="relative z-[1] font-brand-display text-[24px] italic text-brand-cream lg:text-[32px]">
-        Ready to <span className="text-brand-blush">look and feel</span> your best?
+      <div className="rule-gold w-24" />
+      <h2 className="max-w-[560px] font-brand-display text-[24px] leading-[1.3] text-brand-on-dark lg:text-[32px]">
+        Ready to <span className="italic text-brand-champagne">look and feel</span> your best?
       </h2>
-      <p className="relative z-[1] text-[13px] text-[#CBD1DC]">Let's create your perfect look.</p>
+      <p className="text-[13px] text-brand-on-dark-muted">Let&rsquo;s create your perfect look.</p>
       <a
         href="#rendez-vous"
-        className="relative z-[1] mt-2 bg-brand-cream px-7 py-3.5 text-[12.5px] tracking-[.05em] text-brand-navy no-underline"
+        className="mt-1 bg-brand-champagne px-8 py-4 text-[12px] tracking-[.1em] text-brand-black no-underline uppercase transition-colors hover:bg-brand-gold-soft"
       >
         Book Your Appointment
       </a>

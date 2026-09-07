@@ -12,10 +12,10 @@ approved.
 pnpm email:preview
 ```
 
-Renders all four templates with realistic sample data to
+Renders all five templates with realistic sample data to
 `.preview/*.html` (gitignored, regenerate anytime) — open any file directly
 in a browser. A polished side-by-side preview (desktop + mobile toggle, all
-four templates, compatibility notes) is also published as a Claude
+five templates, compatibility notes) is also published as a Claude
 Artifact — see the milestone report for the link.
 
 ## Design tokens (`tokens.js`)
@@ -25,24 +25,29 @@ metallic gold, with the circular "ME" brush emblem):
 
 | Board name | Value | Used for |
 |---|---|---|
-| Noir Profond | `#14110D` | Header/footer bands, CTA button ground |
-| Champagne Gold | `#D9B872` | Text/accents **on the dark bands only** |
-| Doré Métallique | `#B8863E` | Hairline rules, card borders |
-| Rose Poudré | `#E8C9C4` | Social link on the dark footer |
-| Beige Nude | `#D8BFA0` | Reserved |
+| Noir Profond | `#0B0B0A` | Header/footer bands, CTA button ground |
+| Champagne Gold | `#E1B472` | Text/accents **on the dark bands only** |
+| Doré Métallique | `#C29050` | Hairline rules, card borders |
+| Rose Poudré | `#EBD3CF` | Social link on the dark footer |
+| Beige Nude | `#DCC3A6` | Reserved |
 | Ivoire | `#FBF3E7` | Email body surface |
 | Taupe | `#AFA08D` | Reserved |
 | Cuivre | `#A5643D` | Large italic emphasis on ivory |
 | Cuivre (dark step) | `#8B5130` | Small uppercase labels on ivory |
 
-The board names its palette but doesn't print hex codes, so these are
-matched by eye from its swatches — **replace them with official values if
-they exist**; nothing else needs to change.
+The black and the gold ramp are **sampled from the official emblem
+artwork** (decoded pixel values), not estimated. The remaining swatches are
+matched by eye, because the board names its palette but prints no hex
+codes — **replace them with official values if they exist**; nothing else
+needs to change.
+
+These mirror `:root` in `src/App.css`, duplicated for the usual
+cross-runtime reason. Keep the two in sync by hand.
 
 ### The gold-contrast rule
 
 Gold is a light color: Champagne Gold on ivory measures ~1.7:1 and Doré
-Métallique ~2.9:1 — both illegible as text, well under the 4.5:1 AA
+Métallique ~2.6:1 — both illegible as text, well under the 4.5:1 AA
 threshold. So gold is used as *text* only on the Noir Profond bands (~10:1
 there), and small gold-family text on ivory uses the Cuivre steps
 (~5.6:1) instead. Gold still appears on ivory as hairline rules and card
@@ -63,12 +68,18 @@ web font arriving.
 
 Both are uploaded to the public `email-assets` bucket:
 
-- `logo-gold-emblem.png` — the circular "ME" emblem. Transparent outside
-  its black disc, which is exactly why it sits cleanly on the Noir Profond
-  header band. Used in the header at 104px.
 - `logo-gold-lockup.png` — the full horizontal lockup (emblem + script
-  wordmark + "MAKEUP ARTIST"), available for wider layouts; not currently
-  used by any template.
+  wordmark + "MAKEUP ARTIST"). **This is the header mark**, at 230px,
+  matching the site header.
+
+  Note this is the *on-dark* variant. The client's supplied lockup sets
+  "Makeup-by" and the subtitle in solid black — it is a light-background
+  asset, and on the Noir Profond header band half the wordmark would
+  vanish. Those glyphs are recolored to ivory, exactly as the brand
+  board's own dark-background lockup shows them. Nothing else about the
+  artwork was touched.
+- `logo-gold-emblem.png` — the standalone circular "ME" emblem, available
+  as a compact/secondary mark; not currently used by any template.
 
 ## Reusable components (`components.js`)
 
@@ -76,7 +87,7 @@ Both are uploaded to the public `email-assets` bucket:
 |---|---|
 | `emailShell` | Full HTML document wrapper — table-based, Outlook MSO conditional comments, one small `<style>` block as progressive enhancement only |
 | `preheader` | Hidden inbox-preview text |
-| `header` | Dark ink band with the logo (real alt text, fixed width) |
+| `header` | Deep-black band with the full lockup (real alt text, fixed width), closed by a champagne gold rule |
 | `hero` | Eyebrow label + serif title, optional italic emphasis |
 | `paragraph` | Personalized message text |
 | `bookingSummaryCard` | Service/date/time/duration/reference — omits any row whose value isn't supplied |
@@ -100,10 +111,14 @@ is simply omitted from the output when absent — no template ever renders
 3. **`payment_failed`** — "Let's get that *sorted out*." Reassuring, never
    uses alarming language ("failed", "error", "declined" don't appear in
    the customer-facing copy), states plainly that no charge was made.
-4. **`appointment_reminder`** — "See you *soon!*" Includes the optional
+4. **`booking_expired`** — "That time slot has *been released*." Mirrors
+   the `booking_expired` type `../content.js` already sends, so the branded
+   set now covers every type live sending can produce. Non-accusatory, and
+   never claims a charge was made.
+5. **`appointment_reminder`** — "See you *soon!*" Includes the optional
    preparation section only when the caller provides real text.
 
-A fifth type (cancellation/reschedule) is intentionally **not** built —
+A cancellation/reschedule type is intentionally **not** built —
 no cancellation/reschedule flow exists in the app yet, and the components
 above are generic enough that assembling that template later needs no
 structural change here, just a new template function.

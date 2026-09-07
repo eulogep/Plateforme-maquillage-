@@ -20,7 +20,7 @@ mkdirSync(outDir, { recursive: true })
 // bracketed placeholder, same convention as the rest of this codebase for
 // content Emmanuelle hasn't confirmed yet.
 const baseCtx = {
-  businessName: 'Emmanuelle Singani',
+  businessName: 'Makeup-by Emma',
   locationLine: '60 Susa Dr, Suite 121, Stafford, VA 22554',
   contactEmail: 'emmanuellesingani23@gmail.com',
   contactPhone: null,
@@ -36,6 +36,7 @@ const baseCtx = {
   paymentUrl: 'https://emmanuellesingani.com/pay/e3b0c442-98fc-4e1b-9a2f-3f1a2b3c4d5e',
   addToCalendarUrl: 'https://emmanuellesingani.com/ics/e3b0c442-98fc-4e1b-9a2f-3f1a2b3c4d5e',
   bookingDetailsUrl: 'https://emmanuellesingani.com/booking/e3b0c442-98fc-4e1b-9a2f-3f1a2b3c4d5e',
+  rebookUrl: 'https://emmanuellesingani.com/#rendez-vous',
 }
 
 for (const type of BRANDED_EMAIL_TYPES) {

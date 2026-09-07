@@ -47,7 +47,7 @@ const PaymentStep = ({ bookingData, onBack, onPaid }) => {
     return (
       <div className="flex min-h-[70vh] flex-col gap-3.5 p-6 lg:p-7">
         <StepHeader stepIndex={4} title="Secure your slot" />
-        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+        <p role="alert" className="border border-brand-danger/30 bg-brand-danger/5 p-2.5 text-[11.5px] text-brand-danger-deep">
           Payment isn't connected in this environment yet.
         </p>
         <StepFooter onBack={onBack} onContinue={() => {}} continueLabel="Continue" continueDisabled />
@@ -59,7 +59,7 @@ const PaymentStep = ({ bookingData, onBack, onPaid }) => {
     return (
       <div className="flex min-h-[70vh] flex-col gap-3.5 p-6 lg:p-7">
         <StepHeader stepIndex={4} title="Secure your slot" />
-        <p className="text-[11.5px] text-[#8A7A6C]">Preparing payment…</p>
+        <p className="text-[11.5px] text-brand-text-faint">Preparing payment…</p>
         <StepFooter onBack={onBack} onContinue={() => {}} continueLabel="Continue" continueDisabled />
       </div>
     )
@@ -69,7 +69,7 @@ const PaymentStep = ({ bookingData, onBack, onPaid }) => {
     return (
       <div className="flex min-h-[70vh] flex-col gap-3.5 p-6 lg:p-7">
         <StepHeader stepIndex={4} title="Secure your slot" />
-        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+        <p role="alert" className="border border-brand-danger/30 bg-brand-danger/5 p-2.5 text-[11.5px] text-brand-danger-deep">
           {intentState.errorMessage}
         </p>
         <StepFooter onBack={onBack} onContinue={() => {}} continueLabel="Continue" continueDisabled />
@@ -84,14 +84,24 @@ const PaymentStep = ({ bookingData, onBack, onPaid }) => {
   )
 }
 
-// Restyles Stripe's default Payment Element to sit within the approved
-// design's palette/typography rather than its default look.
+// Restyles Stripe's default Payment Element to sit within the brand palette
+// rather than its default look. Only Stripe's supported `variables` are set —
+// nothing here overrides the Element in unsupported ways, and none of it
+// affects payment behavior.
+//
+// This is the one place brand colors are written as literals rather than
+// tokens: the Payment Element renders in a cross-origin iframe and cannot
+// read the page's CSS custom properties. Values mirror :root in App.css.
 const STRIPE_APPEARANCE = {
   variables: {
-    colorPrimary: '#1F2B47',
+    colorPrimary: '#8B5130', // Cuivre — Stripe uses this for focus/accents,
+    // where champagne gold would be far too light to be visible on ivory.
+    colorBackground: '#FBF3E7', // Ivoire
     colorText: '#241F1B',
-    colorTextPlaceholder: '#A99788',
-    fontFamily: 'Jost, sans-serif',
+    colorTextSecondary: '#5C4F44',
+    colorTextPlaceholder: '#6E5F52',
+    colorDanger: '#B23B3B',
+    fontFamily: 'Jost, system-ui, sans-serif',
     borderRadius: '0px',
     fontSizeBase: '13px',
   },
@@ -133,32 +143,32 @@ function PaymentForm({ service, intentData, onBack, onPaid }) {
       <StepHeader stepIndex={4} title="Secure your slot" />
 
       {submitState.status === 'error' && (
-        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+        <p role="alert" className="border border-brand-danger/30 bg-brand-danger/5 p-2.5 text-[11.5px] text-brand-danger-deep">
           {submitState.errorMessage}
         </p>
       )}
 
-      <div className="flex flex-col gap-2 border border-[#241F1B]/[.08] bg-brand-cream-soft p-4 text-[12.5px] text-[#4A3E35]">
+      <div className="flex flex-col gap-2 border border-brand-rule bg-brand-ivory-soft p-4 text-[12.5px] text-brand-text-muted">
         <div className="flex justify-between">
           <span>{service?.name ?? 'Service'} total</span>
           <span>{formatCents(intentData.amountDueNowCents + intentData.remainingBalanceCents)}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between border-t border-brand-rule pt-2 font-medium text-brand-text">
           <span>Deposit due now</span>
           <span className="text-right">{formatCents(intentData.amountDueNowCents)}</span>
         </div>
-        <div className="flex justify-between text-[#8A7A6C]">
+        <div className="flex justify-between text-brand-text-faint">
           <span>Remaining balance</span>
           <span className="text-right">{formatCents(intentData.remainingBalanceCents)}, due at appointment</span>
         </div>
         {!intentData.depositConfirmed && (
-          <div className="mt-1 text-[10.5px] text-[#A99788]">
+          <div className="mt-1 text-[10.5px] text-brand-text-faint">
             Deposit structure is a development placeholder, pending Emmanuelle's confirmation.
           </div>
         )}
       </div>
 
-      <div className="text-[11px] tracking-[.06em] text-[#8A7A6C] uppercase">Payment method</div>
+      <div className="text-[10.5px] tracking-[.12em] text-brand-gold-deep uppercase">Payment method</div>
       <PaymentElement />
 
       <StepFooter

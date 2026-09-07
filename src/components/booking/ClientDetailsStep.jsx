@@ -8,7 +8,7 @@ import { clientDetailsSchema, clientDetailsDefaultValues } from '@/booking/schem
 import { StepHeader, StepFooter } from './StepChrome'
 
 const fieldClass =
-  'rounded-none border-0 border-b border-[#241F1B]/25 bg-transparent px-0.5 py-2.5 text-[13px] shadow-none focus-visible:ring-0 focus-visible:border-brand-navy'
+  'rounded-none border-0 border-b border-brand-rule bg-transparent px-0.5 py-2.5 text-[13px] text-brand-text shadow-none placeholder:text-brand-text-faint focus-visible:ring-0 focus-visible:border-brand-copper-deep'
 
 // Step 3 — Client Details. react-hook-form + zod (src/booking/schemas.js);
 // Continue is disabled until the form is valid.
@@ -110,7 +110,7 @@ const ClientDetailsStep = ({ defaultValues, onSubmitStep, onBack }) => {
             )}
           />
 
-          <label className="mt-1 flex cursor-pointer flex-col items-center gap-1 border border-dashed border-[#241F1B]/25 p-4.5 text-center text-[11.5px] text-[#8A7A6C]">
+          <label className="mt-1 flex cursor-pointer flex-col items-center gap-1 border border-dashed border-brand-rule bg-brand-ivory-soft p-4.5 text-center text-[11.5px] text-brand-text-faint transition-colors hover:border-brand-gold">
             <span>{photo ? `✓ ${photo.name}` : '＋ Upload an inspiration photo'}</span>
             <input
               type="file"
@@ -120,7 +120,7 @@ const ClientDetailsStep = ({ defaultValues, onSubmitStep, onBack }) => {
             />
           </label>
           {form.formState.errors.inspirationPhoto && (
-            <p className="text-[11px] text-red-600">{form.formState.errors.inspirationPhoto.message}</p>
+            <p className="text-[11px] text-brand-danger-deep">{form.formState.errors.inspirationPhoto.message}</p>
           )}
         </form>
       </Form>

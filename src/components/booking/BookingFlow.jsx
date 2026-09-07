@@ -101,15 +101,39 @@ const BookingFlow = () => {
   }
 
   return (
-    <section id="rendez-vous" className="bg-[#EFEAE1] px-6 py-14 font-brand-ui lg:px-14 lg:py-16">
-      <div className="mx-auto max-w-md overflow-hidden bg-brand-cream shadow-[0_4px_24px_rgba(0,0,0,.1)] lg:max-w-lg">
-        {/* Progress indicator, shared across all six steps */}
-        <div className="flex gap-[3px] bg-[#241F1B]/[.08] p-[3px]">
+    <section
+      id="rendez-vous"
+      className="bg-brand-ivory-soft px-6 py-14 font-brand-ui lg:px-14 lg:py-16"
+    >
+      <div className="mx-auto mb-8 max-w-md text-center lg:max-w-lg">
+        <div className="mb-3 text-[10.5px] tracking-[.22em] text-brand-gold-deep uppercase">
+          Book an appointment
+        </div>
+        <h2 className="font-brand-display text-[24px] text-brand-text lg:text-[28px]">
+          Reserve your <span className="italic text-brand-copper">seat.</span>
+        </h2>
+        <div className="rule-gold mx-auto mt-4 w-20" />
+      </div>
+
+      <div className="mx-auto max-w-md overflow-hidden border border-brand-rule bg-brand-ivory shadow-[var(--shadow-soft)] lg:max-w-lg">
+        {/*
+         * Progress indicator, shared across all six steps. It is announced
+         * to assistive tech as a real progressbar rather than relying on
+         * the champagne fill alone to convey position.
+         */}
+        <div
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={bookingSteps.length}
+          aria-valuenow={stepIndex + 1}
+          aria-label={`Booking step ${stepIndex + 1} of ${bookingSteps.length}`}
+          className="flex gap-[3px] bg-brand-rule p-[3px]"
+        >
           {bookingSteps.map((step, i) => (
             <div
               key={step.id}
-              className="h-[3px] flex-1"
-              style={{ background: i <= stepIndex ? '#1F2B47' : 'transparent' }}
+              className="h-[3px] flex-1 transition-colors duration-500"
+              style={{ background: i <= stepIndex ? 'var(--brand-champagne)' : 'transparent' }}
             />
           ))}
         </div>

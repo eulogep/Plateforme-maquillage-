@@ -11,8 +11,13 @@
 // without Emmanuelle's sign-off.
 
 export const business = {
-  name: 'Emmanuelle Singani',
-  tagline: 'Emmanuelle Singani Beauty',
+  // The trading name is the one carried by the official brand mark
+  // (Milestone 6.5). Emmanuelle's personal name is kept separately: it
+  // still belongs in the About section, where it is biography rather than
+  // branding.
+  name: 'Makeup-by Emma',
+  artistName: 'Emmanuelle Singani',
+  tagline: 'Makeup Artist',
   location: {
     line1: '60 Susa Dr, Suite 121',
     city: 'Stafford',

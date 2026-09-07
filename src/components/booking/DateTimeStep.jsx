@@ -70,14 +70,17 @@ const DateTimeStep = ({
       <StepHeader stepIndex={1} title="When works for you?" />
 
       {slotUnavailableNotice && (
-        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+        <p
+          role="status"
+          className="border border-brand-danger/30 bg-brand-danger/5 p-2.5 text-[11.5px] text-brand-danger-deep"
+        >
           {slotUnavailableNotice}
         </p>
       )}
 
       <div className="flex justify-center">
         {loadingContext ? (
-          <p className="py-8 text-[11.5px] text-[#8A7A6C]">Loading availability…</p>
+          <p className="py-8 text-[11.5px] text-brand-text-faint">Loading availability…</p>
         ) : (
           <Calendar
             mode="single"
@@ -85,9 +88,12 @@ const DateTimeStep = ({
             onSelect={handleDateSelect}
             disabled={(d) => !isDateAvailableFromContext(d, context)}
             classNames={{
+              // Selected day: deep black ground with champagne type — gold
+              // on the ivory calendar would be far too low-contrast to
+              // carry a date number.
               day_selected:
-                'bg-brand-navy text-brand-cream hover:bg-brand-navy hover:text-brand-cream focus:bg-brand-navy focus:text-brand-cream',
-              day_today: 'border border-brand-gold text-[#241F1B]',
+                'bg-brand-black text-brand-champagne hover:bg-brand-black hover:text-brand-champagne focus:bg-brand-black focus:text-brand-champagne',
+              day_today: 'border border-brand-gold text-brand-text',
             }}
           />
         )}
@@ -95,13 +101,15 @@ const DateTimeStep = ({
 
       {date && (
         <div>
-          <div className="mb-2 text-[11px] text-[#8A7A6C]">
+          <div className="mb-2 text-[10.5px] tracking-[.12em] text-brand-gold-deep uppercase">
             Available times · {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
           </div>
           {loadingSlots ? (
-            <p className="text-[11.5px] text-[#8A7A6C]">Checking availability…</p>
+            <p className="text-[11.5px] text-brand-text-faint">Checking availability…</p>
           ) : slots.length === 0 ? (
-            <p className="text-[11.5px] text-[#8A7A6C]">No times available this day — try another date.</p>
+            <p className="text-[11.5px] text-brand-text-faint">
+              No times available this day — try another date.
+            </p>
           ) : (
             <div className="grid grid-cols-3 gap-2">
               {slots.map((slot) => {
@@ -112,10 +120,17 @@ const DateTimeStep = ({
                     type="button"
                     onClick={() => onChangeTime(slot)}
                     aria-pressed={isSelected}
-                    className="p-2.5 text-center text-[11px] transition-colors"
+                    // Selected slots change ground *and* weight, so the
+                    // champagne edge is never the only signal.
+                    className={`p-2.5 text-center text-[11px] transition-colors ${
+                      isSelected
+                        ? 'bg-brand-powder-pink font-medium text-brand-text'
+                        : 'bg-transparent text-brand-text-muted hover:bg-brand-ivory-soft'
+                    }`}
                     style={{
-                      border: isSelected ? '1.5px solid #1F2B47' : '1px solid rgba(36,31,27,.15)',
-                      background: isSelected ? '#E4CFC0' : 'transparent',
+                      border: isSelected
+                        ? '1.5px solid var(--brand-champagne)'
+                        : '1px solid var(--brand-rule)',
                     }}
                   >
                     {formatTimeLabel(slot)}

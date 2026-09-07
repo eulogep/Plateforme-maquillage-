@@ -145,7 +145,43 @@ function paymentFailedTemplate(ctx) {
   }
 }
 
-// --- 4. Appointment reminder --------------------------------------------------
+// --- 4. Booking hold expired --------------------------------------------------
+// Mirrors the `booking_expired` type that ../content.js already sends, so the
+// branded set covers every type live sending can produce. Deliberately plain
+// and non-accusatory: the copy states what happened and how to rebook, and
+// never claims a charge was made.
+function expiredTemplate(ctx) {
+  requireCtx(ctx, ['customerName', 'serviceName', 'dateLabel', 'timeLabel', 'appointmentReference'])
+  const rows = [
+    header(),
+    hero({ eyebrow: 'Hold Released', title: 'That time slot has', italicTail: 'been released' }),
+    paragraph(
+      `Hi ${firstName(ctx.customerName)}, the time we were holding for you has expired since payment wasn't completed. The slot is open again — you're very welcome to rebook it.`
+    ),
+    bookingSummaryCard({
+      serviceName: ctx.serviceName,
+      dateLabel: ctx.dateLabel,
+      timeLabel: ctx.timeLabel,
+      reference: ctx.appointmentReference,
+    }),
+    ctx.rebookUrl
+      ? ctaButton({ href: ctx.rebookUrl, label: 'Book Again' })
+      : paragraph('You can start a new booking whenever you’re ready.', {
+          color: brand.colors.faintText,
+        }),
+    footerRow(ctx),
+  ]
+  return {
+    subject: `Your booking hold has expired — ${ctx.businessName}`,
+    html: emailShell({
+      title: 'Booking hold expired',
+      preheaderText: `The hold on your ${ctx.serviceName} slot has expired — rebook anytime.`,
+      rows,
+    }),
+  }
+}
+
+// --- 5. Appointment reminder --------------------------------------------------
 function reminderTemplate(ctx) {
   requireCtx(ctx, ['customerName', 'serviceName', 'dateLabel', 'timeLabel', 'appointmentReference'])
   const rows = [
@@ -177,11 +213,12 @@ const TEMPLATES = {
   booking_payment_pending: paymentPendingTemplate,
   booking_confirmed: confirmedTemplate,
   payment_failed: paymentFailedTemplate,
+  booking_expired: expiredTemplate,
   appointment_reminder: reminderTemplate,
 }
 
 /**
- * @param {'booking_payment_pending'|'booking_confirmed'|'payment_failed'|'appointment_reminder'} type
+ * @param {'booking_payment_pending'|'booking_confirmed'|'payment_failed'|'booking_expired'|'appointment_reminder'} type
  * @param {object} ctx - business + booking data; see individual templates for required fields
  * @returns {{subject: string, html: string}}
  */

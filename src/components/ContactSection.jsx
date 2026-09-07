@@ -25,14 +25,18 @@ const ContactSection = () => {
   }
 
   return (
-    <section id="contact" className="py-20">
+    <section id="contact" className="bg-brand-ivory-soft py-20 font-brand-ui">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Restons en <span className="text-gradient">Contact</span>
+          <div className="mb-3 text-[10.5px] tracking-[.22em] text-brand-gold-deep uppercase">
+            Contact
+          </div>
+          <h2 className="font-brand-display text-[26px] text-brand-text lg:text-[32px]">
+            Restons en <span className="italic text-brand-copper">contact</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <div className="rule-gold mx-auto mt-4 mb-6 w-20" />
+          <p className="mx-auto max-w-2xl text-[14px] leading-relaxed text-brand-text-muted">
             Une question sur mes produits ? Envie de collaborer ? N'hésitez pas à me contacter !
           </p>
         </div>
@@ -40,51 +44,51 @@ const ContactSection = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div>
-            <h3 className="text-2xl font-bold mb-8">Informations de contact</h3>
+            <h3 className="mb-8 font-brand-display text-[19px] text-brand-text">Informations de contact</h3>
             
             <div className="space-y-6 mb-8">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-primary" />
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center border border-brand-rule bg-brand-ivory">
+                  <MapPin className="h-5 w-5 text-brand-copper-deep" />
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-1">Localisation</h4>
-                  <p className="text-muted-foreground">Stafford, Virginie, États-Unis</p>
-                  <p className="text-sm text-muted-foreground">Originaire de Brazzaville, Congo</p>
+                  <h4 className="mb-1 text-[13px] font-medium text-brand-text">Localisation</h4>
+                  <p className="text-[13px] text-brand-text-muted">Stafford, Virginie, États-Unis</p>
+                  <p className="text-[12px] text-brand-text-faint">Originaire de Brazzaville, Congo</p>
                 </div>
               </div>
               
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-6 h-6 text-accent" />
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center border border-brand-rule bg-brand-powder-pink/40">
+                  <Mail className="h-5 w-5 text-brand-copper-deep" />
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-1">Email</h4>
-                  <p className="text-muted-foreground">emmanuellesingani23@gmail.com</p>
+                  <h4 className="mb-1 text-[13px] font-medium text-brand-text">Email</h4>
+                  <p className="text-[13px] text-brand-text-muted">emmanuellesingani23@gmail.com</p>
                 </div>
               </div>
               
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-primary" />
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center border border-brand-rule bg-brand-ivory">
+                  <Phone className="h-5 w-5 text-brand-copper-deep" />
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-1">Réseaux sociaux</h4>
-                  <p className="text-muted-foreground">@emma_sing84 • @emma_sing2</p>
+                  <h4 className="mb-1 text-[13px] font-medium text-brand-text">Réseaux sociaux</h4>
+                  <p className="text-[13px] text-brand-text-muted">@emma_sing84 • @emma_sing2</p>
                 </div>
               </div>
             </div>
 
             {/* Mission Statement */}
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <h4 className="font-bold text-lg mb-3">Ma Mission</h4>
-              <p className="text-muted-foreground leading-relaxed mb-4">
+            <div className="border border-brand-rule bg-brand-ivory p-6">
+              <h4 className="mb-3 font-brand-display text-[17px] text-brand-text">Ma Mission</h4>
+              <p className="mb-4 text-[13px] leading-relaxed text-brand-text-muted">
                 À travers ma marque, je veux révéler la beauté naturelle de chaque femme, 
                 honorer mes racines africaines dans un univers cosmétique mondial, 
                 et inspirer confiance, élégance et fierté culturelle.
               </p>
-              <div className="p-4 bg-primary/5 rounded-lg">
-                <blockquote className="italic text-center">
+              <div className="border-l-2 border-brand-gold bg-brand-ivory-soft p-4">
+                <blockquote className="text-center font-brand-display text-[14px] leading-relaxed text-brand-text-muted italic">
                   "La beauté n'est pas universelle par hasard — elle est le reflet de nos histoires. 
                   Et la mienne commence toujours par un sourire et une touche d'Afrique."
                 </blockquote>
@@ -94,12 +98,12 @@ const ContactSection = () => {
 
           {/* Contact Form */}
           <div>
-            <h3 className="text-2xl font-bold mb-8">Envoyez-moi un message</h3>
+            <h3 className="mb-8 font-brand-display text-[19px] text-brand-text">Envoyez-moi un message</h3>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                  <label htmlFor="name" className="mb-2 block text-[11px] tracking-[.1em] text-brand-text-faint uppercase">
                     Nom complet
                   </label>
                   <input
@@ -108,14 +112,14 @@ const ContactSection = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full border border-brand-rule bg-brand-ivory px-4 py-3 text-[13px] text-brand-text placeholder:text-brand-text-faint focus:border-brand-gold focus:outline-none"
                     placeholder="Votre nom"
                     required
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  <label htmlFor="email" className="mb-2 block text-[11px] tracking-[.1em] text-brand-text-faint uppercase">
                     Email
                   </label>
                   <input
@@ -124,7 +128,7 @@ const ContactSection = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full border border-brand-rule bg-brand-ivory px-4 py-3 text-[13px] text-brand-text placeholder:text-brand-text-faint focus:border-brand-gold focus:outline-none"
                     placeholder="votre@email.com"
                     required
                   />
@@ -132,7 +136,7 @@ const ContactSection = () => {
               </div>
               
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                <label htmlFor="subject" className="mb-2 block text-[11px] tracking-[.1em] text-brand-text-faint uppercase">
                   Sujet
                 </label>
                 <select
@@ -140,7 +144,7 @@ const ContactSection = () => {
                   name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full border border-brand-rule bg-brand-ivory px-4 py-3 text-[13px] text-brand-text placeholder:text-brand-text-faint focus:border-brand-gold focus:outline-none"
                   required
                 >
                   <option value="">Choisissez un sujet</option>
@@ -152,7 +156,7 @@ const ContactSection = () => {
               </div>
               
               <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
+                <label htmlFor="message" className="mb-2 block text-[11px] tracking-[.1em] text-brand-text-faint uppercase">
                   Message
                 </label>
                 <textarea
@@ -161,7 +165,7 @@ const ContactSection = () => {
                   value={formData.message}
                   onChange={handleInputChange}
                   rows={6}
-                  className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                  className="w-full resize-none border border-brand-rule bg-brand-ivory px-4 py-3 text-[13px] text-brand-text placeholder:text-brand-text-faint focus:border-brand-gold focus:outline-none"
                   placeholder="Votre message..."
                   required
                 ></textarea>
@@ -170,14 +174,14 @@ const ContactSection = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="w-full rounded-none bg-brand-black text-[12px] tracking-[.1em] text-brand-champagne uppercase hover:bg-brand-charcoal"
               >
                 <Send className="w-5 h-5 mr-2" />
                 Envoyer le message
               </Button>
             </form>
             
-            <p className="text-sm text-muted-foreground mt-4 text-center">
+            <p className="mt-4 text-center text-[12px] text-brand-text-faint">
               Je réponds généralement dans les 24-48 heures
             </p>
           </div>

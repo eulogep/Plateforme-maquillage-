@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { portfolioImages } from '@/assets/portfolio'
+import { logoEmblem, EMBLEM_ALT } from '@/assets/brand'
 import { business } from '@/config/business'
 import { getServiceById, formatDateLong, formatTimeLabel, formatDateKeyInBusinessTimezone, parseDurationMinutes } from '@/booking/bookingUtils'
 import { describeStatus } from '@/booking/statuses'
@@ -77,39 +77,48 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
   }
 
   return (
-    <div className="flex min-h-[70vh] flex-col bg-brand-navy text-brand-cream">
-      <div className="relative h-[220px] overflow-hidden">
+    <div className="flex min-h-[70vh] flex-col bg-brand-ivory text-brand-text">
+      {/* A branded moment rather than a photo: the ME emblem on the brand's
+          deep black, closed by the board's gold rule. */}
+      <div className="flex flex-col items-center gap-4 bg-brand-black px-6 py-9">
         <img
-          src={portfolioImages['hero-precision-elevated']}
-          alt=""
-          className="h-full w-full object-cover"
-          style={{ filter: 'saturate(1.04) contrast(1.02) brightness(1.01)' }}
+          src={logoEmblem}
+          alt={EMBLEM_ALT}
+          width="600"
+          height="600"
+          className="h-[76px] w-[76px]"
         />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(180deg, rgba(31,43,71,0) 40%, rgba(31,43,71,.95) 100%)' }}
-        />
+        <div className="rule-gold w-24" />
       </div>
+
       <div className="flex flex-1 flex-col gap-3.5 p-6 lg:p-7">
-        <div className="text-[10px] tracking-[.08em] text-brand-gold uppercase">
+        <div
+          role="status"
+          aria-live="polite"
+          className="text-[10.5px] tracking-[.16em] text-brand-gold-deep uppercase"
+        >
           {isProcessing ? 'Payment processing' : status.label}
         </div>
-        <h2 className="font-brand-display text-[22px] italic">
-          {isConfirmed
-            ? "You're booked."
-            : isPaymentFailed
-              ? "Payment didn't go through."
-              : isExpiredOrCancelled
-                ? 'This hold has expired.'
-                : 'Confirming your payment…'}
+        <h2 className="font-brand-display text-[22px] leading-[1.3]">
+          {isConfirmed ? (
+            <>
+              You&rsquo;re <span className="italic text-brand-copper">booked.</span>
+            </>
+          ) : isPaymentFailed ? (
+            "Payment didn't go through."
+          ) : isExpiredOrCancelled ? (
+            'This hold has expired.'
+          ) : (
+            'Confirming your payment…'
+          )}
         </h2>
-        <p className="text-[12.5px] leading-[1.8] text-[#CBD1DC]">
+        <p className="text-[12.5px] leading-[1.8] text-brand-text-muted">
           {service?.name ?? 'Selected service'} · {formatDateLong(bookingData.date)},{' '}
           {formatTimeLabel(bookingData.time)}
           <br />
           For {bookingData.client.fullName}
         </p>
-        <div className="border border-[#F7F1E9]/20 p-3.5 text-[11.5px] leading-[1.6] text-[#CBD1DC]">
+        <div className="border border-brand-rule bg-brand-ivory-soft p-3.5 text-[11.5px] leading-[1.6] text-brand-text-muted">
           {isProcessing &&
             "We're waiting for your bank/Stripe to confirm the payment. This usually takes a few seconds — don't close this page."}
           {isConfirmed && "You're booked. A confirmation email should be on its way to your inbox."}
@@ -120,7 +129,7 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
           {bookingData.appointmentId && (
             <>
               {' '}
-              Reference: <span className="text-brand-cream">{bookingData.appointmentId}</span>
+              Reference: <span className="text-brand-text">{bookingData.appointmentId}</span>
             </>
           )}
         </div>
@@ -129,7 +138,7 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
           <button
             type="button"
             onClick={onRetryPayment}
-            className="bg-brand-cream p-3.5 text-center text-[11.5px] tracking-[.04em] text-brand-ink"
+            className="bg-brand-black p-4 text-center text-[11.5px] tracking-[.1em] text-brand-champagne uppercase"
           >
             Try payment again
           </button>
@@ -139,7 +148,7 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
           type="button"
           onClick={handleAddToCalendar}
           disabled={!isConfirmed}
-          className="mt-auto border border-[#F7F1E9]/50 p-3.5 text-center text-[11.5px] tracking-[.04em] disabled:opacity-50"
+          className="mt-auto border border-brand-gold p-4 text-center text-[11.5px] tracking-[.1em] text-brand-copper-deep uppercase disabled:opacity-45"
           title={isConfirmed ? undefined : "Add-to-calendar isn't available until the appointment is confirmed"}
         >
           Add to calendar
@@ -147,7 +156,7 @@ const ConfirmationStep = ({ bookingData, onStartOver, onRetryPayment }) => {
         <button
           type="button"
           onClick={onStartOver}
-          className="border-b border-brand-cream/60 pb-0.5 text-[11.5px] text-brand-cream/80 hover:text-brand-cream"
+          className="link-underline mx-auto w-fit pb-0.5 text-[11.5px] text-brand-text-muted"
         >
           Start a new booking
         </button>

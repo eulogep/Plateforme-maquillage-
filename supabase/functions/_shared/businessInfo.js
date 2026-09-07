@@ -9,7 +9,11 @@
 // deposit policy wording here — that content doesn't exist yet and must
 // not be fabricated in notification templates either.
 export const businessInfo = {
-  name: 'Emmanuelle Singani',
+  // Trading name, matching the official brand mark and
+  // src/config/business.js (Milestone 6.5). `artistName` is kept separate
+  // because it is biography rather than branding.
+  name: 'Makeup-by Emma',
+  artistName: 'Emmanuelle Singani',
   locationLine: '60 Susa Dr, Suite 121, Stafford, VA 22554',
   contactEmail: 'emmanuellesingani23@gmail.com',
   contactPhone: null,

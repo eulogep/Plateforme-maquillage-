@@ -19,35 +19,35 @@ const ReviewStep = ({ bookingData, policiesAccepted, onTogglePolicies, submissio
       <StepHeader stepIndex={3} title="Review your appointment" />
 
       {showError && (
-        <p className="border border-[#B23B3B]/30 bg-[#B23B3B]/5 p-2.5 text-[11.5px] text-[#8A2E2E]">
+        <p role="alert" className="border border-brand-danger/30 bg-brand-danger/5 p-2.5 text-[11.5px] text-brand-danger-deep">
           {submission.errorMessage}
         </p>
       )}
 
-      <div className="flex flex-col gap-2 border border-[#241F1B]/[.08] bg-brand-cream-soft p-4 text-[12.5px] text-[#4A3E35]">
+      <div className="flex flex-col gap-2 border border-brand-rule bg-brand-ivory-soft p-4 text-[12.5px] text-brand-text-muted">
         <Row label="Service" value={service?.name ?? '—'} />
         <Row label="Date" value={formatDateLong(bookingData.date)} />
         <Row label="Time" value={formatTimeLabel(bookingData.time)} />
         <Row label="Duration" value={service?.duration ?? '—'} />
         <Row label="Location" value={business.location.full} />
-        <div className="mt-0.5 flex justify-between border-t border-[#241F1B]/10 pt-2">
+        <div className="mt-0.5 flex justify-between border-t border-brand-rule pt-2">
           <span>Price</span>
           <span>{service ? `${formatPrice(service.priceFrom)} (est.)` : '—'}</span>
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 border border-[#241F1B]/[.08] bg-brand-cream-soft p-4 text-[12.5px] text-[#4A3E35]">
+      <div className="flex flex-col gap-2 border border-brand-rule bg-brand-ivory-soft p-4 text-[12.5px] text-brand-text-muted">
         <Row label="Name" value={bookingData.client.fullName} />
         <Row label="Email" value={bookingData.client.email} />
         <Row label="Phone" value={bookingData.client.phone} />
         {bookingData.client.occasion && <Row label="Occasion" value={bookingData.client.occasion} />}
       </div>
 
-      <label className="flex items-start gap-2.5 text-[11.5px] text-[#4A3E35]">
+      <label className="flex items-start gap-2.5 text-[11.5px] text-brand-text-muted">
         <Checkbox
           checked={policiesAccepted}
           onCheckedChange={(checked) => onTogglePolicies(checked === true)}
-          className="mt-0.5 rounded-none border-[#1F2B47] data-[state=checked]:bg-brand-navy data-[state=checked]:border-brand-navy"
+          className="mt-0.5 rounded-none border-brand-text data-[state=checked]:bg-brand-black data-[state=checked]:border-brand-black data-[state=checked]:text-brand-champagne"
         />
         <span>I have read and agree to the booking policies.</span>
       </label>

@@ -20,7 +20,7 @@ const { colors, fonts, logo, social } = brand
 
 // Subtle gold hairline used for card borders and dividers — the brand
 // board's own recurring detail.
-const GOLD_HAIRLINE = 'rgba(184,134,62,.30)'
+const GOLD_HAIRLINE = 'rgba(194,144,80,.32)'
 
 function esc(value) {
   return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -34,11 +34,11 @@ export function preheader(text) {
 }
 
 /**
- * Noir Profond header band carrying the official circular "ME" emblem,
- * closed by a thin Champagne Gold rule (the board's signature divider).
- * The emblem PNG is transparent outside its black disc, so it sits on this
- * band exactly as the brand board shows it. Alt text carries the brand for
- * images-off clients.
+ * Noir Profond header band carrying the full official lockup, closed by a
+ * thin Champagne Gold rule (the board's signature divider). The PNG is the
+ * on-dark variant, so the whole wordmark reads on this band. Alt text
+ * carries the brand for images-off clients — and because it is the only
+ * image in the email, the message stays completely readable without it.
  */
 export function header() {
   return `
