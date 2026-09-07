@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   header,
+  hero,
   ctaButton,
   bookingSummaryCard,
   paymentSummaryCard,
@@ -17,6 +18,40 @@ describe('header', () => {
     expect(html).toContain(`src="${brand.logo.url}"`)
     expect(html).toContain(`alt="${brand.logo.alt}"`)
     expect(html).toContain('width=')
+  })
+})
+
+describe('brand contrast rule', () => {
+  // Champagne Gold on ivory is ~1.7:1 and Doré Métallique ~2.9:1 — neither
+  // is legible as text on the light surface, so gold-as-text is confined
+  // to the Noir Profond bands (~10:1) and ivory uses the Cuivre steps.
+  // These tests exist so that rule can't be quietly undone.
+  it('never uses Champagne Gold as text directly on the ivory surface', () => {
+    // Components whose text sits straight on ivory. The CTA button is
+    // deliberately excluded: it lays down its own Noir Profond ground, so
+    // gold type there is correct (covered by its own test below).
+    const ivorySurfaces = [
+      hero({ eyebrow: 'Confirmed', title: 'Your appointment is', italicTail: 'confirmed!' }),
+      bookingSummaryCard({ serviceName: 'Soft Glam', dateLabel: 'Aug 13, 2030' }),
+    ].join('')
+    expect(ivorySurfaces).not.toContain(`color:${brand.colors.gold}`)
+    expect(ivorySurfaces).not.toContain(`color:${brand.colors.goldDeep}`)
+  })
+
+  it('uses the darker Cuivre step for the small uppercase eyebrow', () => {
+    const html = hero({ eyebrow: 'Confirmed', title: 'T' })
+    expect(html).toContain(`color:${brand.colors.copperDeep}`)
+  })
+
+  it('puts Champagne Gold type on a Noir Profond ground in the CTA', () => {
+    const html = ctaButton({ href: 'https://example.com', label: 'Go' })
+    expect(html).toContain(`background:${brand.colors.ink}`)
+    expect(html).toContain(`color:${brand.colors.gold}`)
+  })
+
+  it('uses Rose Poudré for the social link on the dark footer', () => {
+    const html = footer({ businessName: 'X', locationLine: 'Y', contactEmail: 'e@x.com' })
+    expect(html).toContain(`color:${brand.colors.accentSoft}`)
   })
 })
 

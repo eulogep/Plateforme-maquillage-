@@ -7,9 +7,20 @@
 // partially honor them. A <style> block is still included once, in the
 // shell, purely as progressive enhancement (a couple of small-screen
 // tweaks) — nothing it contains is required for the email to look right.
+//
+// COLOR/CONTRAST RULE (see tokens.js): Champagne Gold is used for text
+// only on the Noir Profond bands, where it reaches ~10:1. On the ivory
+// surface, gold-family text uses the Cuivre steps instead, because no
+// shade that still reads as "gold" clears 4.5:1 on ivory. Gold still
+// appears on ivory — as hairline rules and card borders, where contrast
+// ratios don't apply because it carries no text.
 import { brand } from './tokens.js'
 
 const { colors, fonts, logo, social } = brand
+
+// Subtle gold hairline used for card borders and dividers — the brand
+// board's own recurring detail.
+const GOLD_HAIRLINE = 'rgba(184,134,62,.30)'
 
 function esc(value) {
   return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -22,26 +33,32 @@ export function preheader(text) {
   )}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>`
 }
 
-/** Dark ink header band with the logo, centered. Alt text covers images-off clients. */
+/**
+ * Noir Profond header band carrying the official circular "ME" emblem,
+ * closed by a thin Champagne Gold rule (the board's signature divider).
+ * The emblem PNG is transparent outside its black disc, so it sits on this
+ * band exactly as the brand board shows it. Alt text carries the brand for
+ * images-off clients.
+ */
 export function header() {
   return `
   <tr>
-    <td style="background:${colors.ink};padding:28px 24px;text-align:center;">
+    <td style="background:${colors.ink};padding:30px 24px 26px;text-align:center;">
       <img src="${logo.url}" width="${logo.width}" alt="${esc(logo.alt)}" style="display:inline-block;width:${
     logo.width
   }px;max-width:${logo.width}px;height:auto;border:0;outline:none;text-decoration:none;" />
-      <!--[if !mso]><!-->
-      <div style="display:none;"></div>
-      <!--<![endif]-->
     </td>
+  </tr>
+  <tr>
+    <td style="background:${colors.gold};font-size:0;line-height:0;height:2px;">&nbsp;</td>
   </tr>`
 }
 
 /**
- * Hero/title block. `eyebrow` is the small gold uppercase label (matches
- * the website's section-label pattern), `title` the main line, `italicTail`
- * an optional emphasized closing phrase (Georgia italic, evoking the
- * site's Playfair Display italic accents).
+ * Hero/title block. `eyebrow` is the small uppercase label (Cuivre on
+ * ivory, for contrast), `title` the main serif line, `italicTail` an
+ * optional emphasized closing phrase in Cuivre italic — echoing the
+ * board's script/serif pairing without depending on a web font.
  */
 export function hero({ eyebrow, title, italicTail, bg = colors.cream }) {
   return `
@@ -49,13 +66,13 @@ export function hero({ eyebrow, title, italicTail, bg = colors.cream }) {
     <td style="background:${bg};padding:36px 32px 8px;text-align:center;">
       ${
         eyebrow
-          ? `<div style="font-family:${fonts.body};font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:${colors.gold};margin:0 0 12px;">${esc(
+          ? `<div style="font-family:${fonts.body};font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:${colors.copperDeep};margin:0 0 14px;">${esc(
               eyebrow
             )}</div>`
           : ''
       }
-      <div style="font-family:${fonts.heading};font-size:26px;line-height:1.3;color:${colors.inkText};margin:0;">
-        ${esc(title)}${italicTail ? ` <em style="color:${colors.magenta};">${esc(italicTail)}</em>` : ''}
+      <div style="font-family:${fonts.heading};font-size:27px;line-height:1.3;color:${colors.inkText};margin:0;">
+        ${esc(title)}${italicTail ? ` <em style="color:${colors.copper};">${esc(italicTail)}</em>` : ''}
       </div>
     </td>
   </tr>`
@@ -65,7 +82,7 @@ export function hero({ eyebrow, title, italicTail, bg = colors.cream }) {
 export function paragraph(text, { bg = colors.cream, color = colors.mutedText } = {}) {
   return `
   <tr>
-    <td style="background:${bg};padding:12px 32px 4px;font-family:${fonts.body};font-size:14px;line-height:1.7;color:${color};text-align:center;">
+    <td style="background:${bg};padding:14px 32px 4px;font-family:${fonts.body};font-size:14px;line-height:1.7;color:${color};text-align:center;">
       ${esc(text)}
     </td>
   </tr>`
@@ -75,7 +92,7 @@ function summaryRow(label, value) {
   if (!value) return ''
   return `
     <tr>
-      <td style="padding:7px 0;font-family:${fonts.body};font-size:13px;color:${colors.faintText};">${esc(
+      <td style="padding:7px 0;font-family:${fonts.body};font-size:13px;color:${colors.mutedText};">${esc(
     label
   )}</td>
       <td style="padding:7px 0;font-family:${fonts.body};font-size:13px;color:${colors.inkText};text-align:right;">${esc(
@@ -86,7 +103,7 @@ function summaryRow(label, value) {
 
 /**
  * The appointment-details card: service/date/time/duration/reference, in a
- * bordered cream-soft box matching the website's review-step card styling.
+ * gold-hairline box on the warm ivory tint.
  */
 export function bookingSummaryCard({ serviceName, dateLabel, timeLabel, durationLabel, reference }) {
   return `
@@ -94,7 +111,7 @@ export function bookingSummaryCard({ serviceName, dateLabel, timeLabel, duration
     <td style="background:${colors.cream};padding:20px 32px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${
         colors.creamSoft
-      };border:1px solid rgba(36,31,27,.08);">
+      };border:1px solid ${GOLD_HAIRLINE};">
         <tr>
           <td style="padding:18px 20px;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -119,7 +136,7 @@ export function paymentSummaryCard({ amountLabel, amountValue, remainingLabel, r
     <td style="background:${colors.cream};padding:0 32px 20px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${
         colors.creamSoft
-      };border:1px solid rgba(36,31,27,.08);">
+      };border:1px solid ${GOLD_HAIRLINE};">
         <tr>
           <td style="padding:18px 20px;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -137,22 +154,25 @@ export function paymentSummaryCard({ amountLabel, amountValue, remainingLabel, r
  * Bulletproof CTA button — a table cell with a background color, not a
  * styled <a> alone, so it renders correctly in Outlook (which ignores CSS
  * padding/background on inline elements but honors it on table cells).
- * The link text itself remains fully visible/clickable even with images
- * off, since no part of the button is an image.
+ * Noir Profond ground with Champagne Gold type, mirroring the emblem
+ * itself (~10:1 contrast). No part of it is an image, so it stays fully
+ * visible and clickable with images blocked.
  */
 export function ctaButton({ href, label, primary = true }) {
-  const bg = primary ? colors.navy : 'transparent'
-  const color = primary ? colors.cream : colors.navy
-  const border = primary ? 'none' : `1px solid ${colors.navy}`
+  const bg = primary ? colors.ink : 'transparent'
+  const color = primary ? colors.gold : colors.inkText
+  const border = primary ? 'none' : `1px solid ${colors.goldDeep}`
   return `
   <tr>
-    <td style="background:${colors.cream};padding:4px 32px 28px;text-align:center;">
+    <td style="background:${colors.cream};padding:6px 32px 30px;text-align:center;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
         <tr>
           <td style="background:${bg};border:${border};">
-            <a href="${esc(href)}" style="display:inline-block;padding:14px 32px;font-family:${
+            <a href="${esc(href)}" style="display:inline-block;padding:15px 34px;font-family:${
     fonts.body
-  };font-size:13px;letter-spacing:.04em;color:${color};text-decoration:none;">${esc(label)}</a>
+  };font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:${color};text-decoration:none;">${esc(
+    label
+  )}</a>
           </td>
         </tr>
       </table>
@@ -160,13 +180,17 @@ export function ctaButton({ href, label, primary = true }) {
   </tr>`
 }
 
-/** Optional secondary text link (not a full button) — e.g. "View booking details". */
+/**
+ * Secondary text link — near-black and underlined rather than colored,
+ * so it stays well above AA contrast on ivory and doesn't rely on color
+ * alone to read as a link.
+ */
 export function textLink({ href, label }) {
   return `
   <tr>
     <td style="background:${colors.cream};padding:0 32px 28px;text-align:center;">
-      <a href="${esc(href)}" style="font-family:${fonts.body};font-size:12px;color:${
-    colors.navy
+      <a href="${esc(href)}" style="font-family:${fonts.body};font-size:12.5px;color:${
+    colors.inkText
   };text-decoration:underline;">${esc(label)}</a>
     </td>
   </tr>`
@@ -177,36 +201,40 @@ export function preparationNote(text) {
   if (!text) return ''
   return `
   <tr>
-    <td style="background:${colors.creamSoft};padding:16px 32px;font-family:${fonts.body};font-size:12.5px;line-height:1.6;color:${colors.mutedText};border-top:1px solid rgba(36,31,27,.08);">
+    <td style="background:${colors.creamSoft};padding:16px 32px;font-family:${fonts.body};font-size:12.5px;line-height:1.6;color:${colors.mutedText};border-top:1px solid ${GOLD_HAIRLINE};">
       ${esc(text)}
     </td>
   </tr>`
 }
 
 /**
- * Dark ink footer — business name, location, contact (only confirmed
+ * Noir Profond footer — business name, location, contact (only confirmed
  * fields; contactPhone omitted when null, never invented), Instagram.
+ * Opened by the same thin gold rule that closes the header.
  */
 export function footer({ businessName, locationLine, contactEmail, contactPhone }) {
   return `
   <tr>
+    <td style="background:${colors.goldDeep};font-size:0;line-height:0;height:1px;">&nbsp;</td>
+  </tr>
+  <tr>
     <td style="background:${colors.ink};padding:28px 32px;text-align:center;">
-      <div style="font-family:${fonts.heading};font-style:italic;font-size:15px;color:${
-    colors.cream
-  };margin:0 0 8px;">${esc(businessName)}</div>
-      <div style="font-family:${fonts.body};font-size:11.5px;line-height:1.7;color:#C9BFB4;">
+      <div style="font-family:${fonts.heading};font-style:italic;font-size:16px;color:${
+    colors.gold
+  };margin:0 0 10px;">${esc(businessName)}</div>
+      <div style="font-family:${fonts.body};font-size:11.5px;line-height:1.7;color:${colors.onDarkText};">
         ${esc(locationLine)}<br/>
-        ${contactEmail ? `<a href="mailto:${esc(contactEmail)}" style="color:#C9BFB4;text-decoration:underline;">${esc(contactEmail)}</a>` : ''}${
+        ${contactEmail ? `<a href="mailto:${esc(contactEmail)}" style="color:${colors.onDarkText};text-decoration:underline;">${esc(contactEmail)}</a>` : ''}${
     contactPhone ? ` &middot; ${esc(contactPhone)}` : ''
   }
       </div>
       <div style="margin-top:14px;">
-        <a href="${esc(social.instagramUrl)}" style="font-family:${fonts.body};font-size:11px;letter-spacing:.05em;color:${
-    colors.blush
+        <a href="${esc(social.instagramUrl)}" style="font-family:${fonts.body};font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:${
+    colors.accentSoft
   };text-decoration:underline;">${esc(social.instagramLabel)}</a>
       </div>
-      <div style="margin-top:16px;font-family:${fonts.body};font-size:10px;color:#8A7A6C;">
-        &copy; ${new Date().getFullYear()} ${esc(businessName)} Beauty. All rights reserved.
+      <div style="margin-top:18px;font-family:${fonts.body};font-size:10px;color:${colors.faintText};">
+        &copy; ${new Date().getFullYear()} ${esc(businessName)}. All rights reserved.
       </div>
     </td>
   </tr>`

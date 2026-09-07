@@ -20,25 +20,55 @@ Artifact — see the milestone report for the link.
 
 ## Design tokens (`tokens.js`)
 
-| Role | Value |
-|---|---|
-| Ink (header/footer bands) | `#14110D` |
-| Cream (page/card background) | `#F7F1E9` |
-| Cream soft (nested card background) | `#FBF7F1` |
-| Navy (primary button, links) | `#1F2B47` |
-| Magenta (italic emphasis) | `#9B2F6B` |
-| Blush (Instagram link) | `#D9A0BE` |
-| Gold (eyebrow labels) | `#B08D57` |
+Taken from the official **Makeup-by Emma** brand board (black + champagne /
+metallic gold, with the circular "ME" brush emblem):
 
-Exactly the site's own brand tokens (`src/App.css`) — the emails are
-designed to read as an extension of emmanuellesingani.com, not a generic
-transactional-email template.
+| Board name | Value | Used for |
+|---|---|---|
+| Noir Profond | `#14110D` | Header/footer bands, CTA button ground |
+| Champagne Gold | `#D9B872` | Text/accents **on the dark bands only** |
+| Doré Métallique | `#B8863E` | Hairline rules, card borders |
+| Rose Poudré | `#E8C9C4` | Social link on the dark footer |
+| Beige Nude | `#D8BFA0` | Reserved |
+| Ivoire | `#FBF3E7` | Email body surface |
+| Taupe | `#AFA08D` | Reserved |
+| Cuivre | `#A5643D` | Large italic emphasis on ivory |
+| Cuivre (dark step) | `#8B5130` | Small uppercase labels on ivory |
 
-**Fonts**: `Georgia, 'Times New Roman', Times, serif` for headings (the
-closest reliable serif to the site's Playfair Display — real email clients
-cannot load Google Fonts: Outlook desktop never honors `@font-face` at all,
-and Gmail strips `<link>` tags), `Arial, Helvetica, sans-serif` for body
-text. No text ever depends on a web font actually loading.
+The board names its palette but doesn't print hex codes, so these are
+matched by eye from its swatches — **replace them with official values if
+they exist**; nothing else needs to change.
+
+### The gold-contrast rule
+
+Gold is a light color: Champagne Gold on ivory measures ~1.7:1 and Doré
+Métallique ~2.9:1 — both illegible as text, well under the 4.5:1 AA
+threshold. So gold is used as *text* only on the Noir Profond bands (~10:1
+there), and small gold-family text on ivory uses the Cuivre steps
+(~5.6:1) instead. Gold still appears on ivory as hairline rules and card
+borders, where contrast ratios don't apply because it carries no text.
+That's also how the brand board itself always presents gold — on black.
+`components.test.js` enforces this rule so it can't regress.
+
+**Fonts**: the board's script face ("Script Élégante") is never used as
+live email text — it reaches the reader as pixels inside the logo image,
+which is immune to font loading. Live text uses `Georgia, 'Times New
+Roman', Times, serif` (closest safe stand-in for the board's "Serif Luxe")
+and `Arial, Helvetica, sans-serif` ("Sans-serif Moderne"). Real email
+clients cannot load Google Fonts — Outlook desktop never honors
+`@font-face`, and Gmail strips `<link>` tags — so no text ever depends on a
+web font arriving.
+
+### Logo assets
+
+Both are uploaded to the public `email-assets` bucket:
+
+- `logo-gold-emblem.png` — the circular "ME" emblem. Transparent outside
+  its black disc, which is exactly why it sits cleanly on the Noir Profond
+  header band. Used in the header at 104px.
+- `logo-gold-lockup.png` — the full horizontal lockup (emblem + script
+  wordmark + "MAKEUP ARTIST"), available for wider layouts; not currently
+  used by any template.
 
 ## Reusable components (`components.js`)
 
@@ -96,8 +126,10 @@ structural change here, just a new template function.
   element (no reliance on client default text/background), which is the
   safest baseline against most clients' automatic dark-mode color
   inversion.
-- **Accessibility**: real semantic contrast (dark ink-on-cream and
-  cream-on-ink throughout, well above WCAG AA for this text size), no
+- **Accessibility**: real measured contrast throughout — dark ink on ivory
+  and gold/warm-grey on Noir Profond, all above WCAG AA for their text
+  size, with the gold rule above keeping the light gold off light grounds
+  as text; no
   information conveyed by color alone, descriptive link text ("View
   booking details", not "click here"), alt text on the only image.
 
