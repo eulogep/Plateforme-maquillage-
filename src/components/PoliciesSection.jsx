@@ -47,12 +47,12 @@ const PoliciesSection = () => {
       </Accordion>
 
       <div className="mt-6 text-center text-[11.5px] text-brand-text-faint">
-        Full policy details available on the policies page.{' '}
+        Questions about booking policies?{' '}
         <a
-          href="#policies"
+          href="#contact"
           className="link-underline ml-1 text-[11px] tracking-[.1em] text-brand-gold-deep uppercase"
         >
-          View all policies
+          Contact Emmanuelle
         </a>
       </div>
     </section>

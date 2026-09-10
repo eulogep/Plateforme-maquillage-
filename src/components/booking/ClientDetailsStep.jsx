@@ -3,12 +3,19 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Form, FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { clientDetailsSchema, clientDetailsDefaultValues } from '@/booking/schemas'
 import { StepHeader, StepFooter } from './StepChrome'
 
 const fieldClass =
   'rounded-none border-0 border-b border-brand-rule bg-transparent px-0.5 py-2.5 text-[13px] text-brand-text shadow-none placeholder:text-brand-text-faint focus-visible:ring-0 focus-visible:border-brand-copper-deep'
+
+// A real, always-visible label for every field — placeholders below stay
+// as a supplementary hint, but are never the field's only identifier
+// (placeholder-as-label fails WCAG 1.3.1 and disappears the moment the
+// visitor starts typing). FormLabel/FormControl already wire htmlFor,
+// aria-describedby and aria-invalid automatically via useFormField().
+const labelClass = 'text-[10px] tracking-[.12em] text-brand-gold-deep uppercase'
 
 // Step 3 — Client Details. react-hook-form + zod (src/booking/schemas.js);
 // Continue is disabled until the form is valid.
@@ -49,8 +56,9 @@ const ClientDetailsStep = ({ defaultValues, onSubmitStep, onBack }) => {
             name="fullName"
             render={({ field }) => (
               <FormItem className="gap-1">
+                <FormLabel className={labelClass}>Full name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Full name" className={fieldClass} {...field} />
+                  <Input placeholder="Jane Doe" className={fieldClass} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -61,8 +69,9 @@ const ClientDetailsStep = ({ defaultValues, onSubmitStep, onBack }) => {
             name="phone"
             render={({ field }) => (
               <FormItem className="gap-1">
+                <FormLabel className={labelClass}>Phone number</FormLabel>
                 <FormControl>
-                  <Input type="tel" placeholder="Phone number" className={fieldClass} {...field} />
+                  <Input type="tel" placeholder="(555) 123-4567" className={fieldClass} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -73,8 +82,9 @@ const ClientDetailsStep = ({ defaultValues, onSubmitStep, onBack }) => {
             name="email"
             render={({ field }) => (
               <FormItem className="gap-1">
+                <FormLabel className={labelClass}>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Email" className={fieldClass} {...field} />
+                  <Input type="email" placeholder="jane@example.com" className={fieldClass} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,8 +95,9 @@ const ClientDetailsStep = ({ defaultValues, onSubmitStep, onBack }) => {
             name="occasion"
             render={({ field }) => (
               <FormItem className="gap-1">
+                <FormLabel className={labelClass}>Occasion</FormLabel>
                 <FormControl>
-                  <Input placeholder="Occasion (wedding, event, shoot…)" className={fieldClass} {...field} />
+                  <Input placeholder="Wedding, event, shoot…" className={fieldClass} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,9 +108,10 @@ const ClientDetailsStep = ({ defaultValues, onSubmitStep, onBack }) => {
             name="notes"
             render={({ field }) => (
               <FormItem className="gap-1">
+                <FormLabel className={labelClass}>Notes for Emmanuelle</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Notes for Emmanuelle"
+                    placeholder="Anything else I should know?"
                     rows={2}
                     className={`min-h-0 resize-none ${fieldClass}`}
                     {...field}

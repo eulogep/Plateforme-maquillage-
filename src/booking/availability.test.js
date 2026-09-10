@@ -1,5 +1,12 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { isDateAvailableFromContext, loadAvailabilityContext, getAvailableTimeSlots } from './availability'
+
+// These unit tests explicitly exercise the unconfigured fallback. A local
+// developer's .env.local must never turn them into live Supabase requests.
+vi.mock('@/lib/supabaseClient', () => ({
+  supabase: null,
+  isSupabaseConfigured: false,
+}))
 
 // A fixed weekly schedule for testing the pure predicate — Sunday closed,
 // every other day open. Weekday numbers follow JS Date#getDay() (0=Sun).

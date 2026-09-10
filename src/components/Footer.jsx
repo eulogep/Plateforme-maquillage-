@@ -8,7 +8,14 @@ import { business, formatBusinessPhone } from '@/config/business'
 // confirmation (phone number) or doesn't specify one (policy page links have
 // no route yet), that is shown as an explicit placeholder rather than
 // invented. See design-reference/ for the source file.
-const NAV_LINKS = ['Home', 'Services', 'Portfolio', 'About', 'Policies', 'Contact']
+const NAV_LINKS = [
+  { label: 'Home', href: '#accueil' },
+  { label: 'Services', href: '#services' },
+  { label: 'Portfolio', href: '#portfolio' },
+  { label: 'About', href: '#histoire' },
+  { label: 'Policies', href: '#policies' },
+  { label: 'Contact', href: '#contact' },
+]
 const SERVICE_LINKS = [
   'Natural Glam',
   'Soft Glam',
@@ -35,14 +42,16 @@ const Footer = () => {
           </div>
 
           {/* Navigation */}
-          <div className="flex flex-col gap-2 text-[12px] text-brand-on-dark-muted">
+          <nav aria-label="Footer navigation" className="flex flex-col gap-2 text-[12px] text-brand-on-dark-muted">
             <span className="mb-1 text-[10px] tracking-[.14em] text-brand-champagne uppercase">
               Navigation
             </span>
-            {NAV_LINKS.map((label) => (
-              <span key={label}>{label}</span>
+            {NAV_LINKS.map(({ label, href }) => (
+              <a key={label} href={href} className="w-fit text-brand-on-dark-muted hover:text-brand-champagne">
+                {label}
+              </a>
             ))}
-          </div>
+          </nav>
 
           {/* Services */}
           <div className="flex flex-col gap-2 text-[12px] text-brand-on-dark-muted">
@@ -50,7 +59,9 @@ const Footer = () => {
               Services
             </span>
             {SERVICE_LINKS.map((label) => (
-              <span key={label}>{label}</span>
+              <a key={label} href="#services" className="w-fit text-brand-on-dark-muted hover:text-brand-champagne">
+                {label}
+              </a>
             ))}
           </div>
 

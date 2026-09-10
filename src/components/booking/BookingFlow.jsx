@@ -1,13 +1,19 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import ServiceStep from './ServiceStep'
 import DateTimeStep from './DateTimeStep'
 import ClientDetailsStep from './ClientDetailsStep'
 import ReviewStep from './ReviewStep'
-import PaymentStep from './PaymentStep'
 import ConfirmationStep from './ConfirmationStep'
 import { getServiceById, bookingSteps, formatDateKeyInBusinessTimezone } from '@/booking/bookingUtils'
 import { clientDetailsDefaultValues } from '@/booking/schemas'
 import { submitBooking, generateIdempotencyKey, BookingApiError } from '@/booking/bookingApi'
+
+// Code-split: PaymentStep pulls in @stripe/react-stripe-js + @stripe/stripe-js,
+// the single heaviest dependency in the app, needed only once a visitor
+// actually reaches step 5 of 6 after real interaction — most people
+// browsing services/portfolio never load it at all. Same component,
+// same props, same behavior; only *when* its code downloads changes.
+const PaymentStep = lazy(() => import('./PaymentStep'))
 
 const baseBookingData = {
   serviceId: '',
@@ -187,7 +193,9 @@ const BookingFlow = () => {
         )}
 
         {stepIndex === 4 && (
-          <PaymentStep bookingData={bookingData} onBack={goBack} onPaid={goNext} />
+          <Suspense fallback={<StepLoadingFallback />}>
+            <PaymentStep bookingData={bookingData} onBack={goBack} onPaid={goNext} />
+          </Suspense>
         )}
 
         {stepIndex === 5 && (
@@ -199,6 +207,23 @@ const BookingFlow = () => {
         )}
       </div>
     </section>
+  )
+}
+
+// Matches each step's own `min-h-[70vh]` shell so the Suspense fallback
+// doesn't collapse the layout while PaymentStep's chunk downloads (usually
+// near-instant on a warm cache; this covers the first real fetch).
+function StepLoadingFallback() {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex min-h-[70vh] flex-col items-center justify-center gap-3 p-6 text-[11.5px] text-brand-text-faint"
+    >
+      <span className="sr-only">Loading payment step…</span>
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-rule border-t-brand-gold-deep motion-reduce:animate-none" />
+      <span aria-hidden="true">Loading payment…</span>
+    </div>
   )
 }
 
