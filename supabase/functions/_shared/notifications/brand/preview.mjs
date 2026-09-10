@@ -22,7 +22,7 @@ mkdirSync(outDir, { recursive: true })
 const baseCtx = {
   businessName: 'Makeup-by Emma',
   locationLine: '60 Susa Dr, Suite 121, Stafford, VA 22554',
-  contactEmail: 'emmanuellesingani23@gmail.com',
+  contactEmail: 'makeupbyemma2020@gmail.com',
   contactPhone: '+15712669829', // real, confirmed
   customerName: 'Jane Doe',
   serviceName: 'Soft Glam',

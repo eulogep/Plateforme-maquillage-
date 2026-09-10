@@ -1,0 +1,750 @@
+{
+  "status": "SUPERSEDED BY CONFIRMED_INTEGRATION.json",
+  "observedAt": "2026-09-10",
+  "sourceRole": "Secondary, unverified website; current project remains primary",
+  "runtimeImportAllowed": false,
+  "note": "Historical pre-confirmation review artifact. The client later accepted the observed information and requested both phone numbers; see CONFIRMED_INTEGRATION.json for what was applied and which values remain absent from the source.",
+  "services": [
+    {
+      "id": "basic-glam",
+      "classification": [
+        "A",
+        "B",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": {
+        "name": "Basic Glam",
+        "tag": "Natural Glam",
+        "priceFromUsd": 130,
+        "durationMinutes": null,
+        "includes": [
+          "Skin/base",
+          "Brows",
+          "Lashes"
+        ],
+        "excludes": [
+          "Eyeshadow",
+          "Contour"
+        ]
+      },
+      "currentProject": {
+        "id": "natural-glam",
+        "priceFromUsd": 85,
+        "durationMinutes": 45,
+        "confirmed": false
+      },
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm whether this is the same service and confirm price, duration and scope.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase services table (reviewed migration after approval; do not apply the development seed to production)"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "signature-glam",
+      "classification": [
+        "A",
+        "B",
+        "E",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": {
+        "name": "Signature Glam",
+        "tag": "Full Glam",
+        "priceFromUsd": 150,
+        "durationMinutes": null,
+        "includes": [
+          "Skin preparation",
+          "Choice of eye intensity",
+          "Contour",
+          "Highlight",
+          "Lashes"
+        ],
+        "extraFeeAmountUnknown": [
+          "Glitter",
+          "Cut crease",
+          "Gems"
+        ]
+      },
+      "currentProject": {
+        "id": "full-glam",
+        "priceFromUsd": 150,
+        "durationMinutes": 75,
+        "confirmed": false
+      },
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Equal price does not confirm authenticity or service equivalence; Soft Glam remains separate locally.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase services table (reviewed migration after approval; do not apply the development seed to production)"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "on-demand",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": {
+        "name": "The On Demand Glam",
+        "priceFromUsd": 300,
+        "unit": "visit",
+        "peopleIncluded": 1,
+        "additionalPersonUsd": 150,
+        "radiusMiles": 15,
+        "originZip": "30318",
+        "extraMileUsd": 5,
+        "bridalExcluded": true,
+        "durationMinutes": null
+      },
+      "currentProject": "No dedicated mobile SKU; location ZIP 22554; on-location badge exists.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Resolve origin, mileage calculation, travel time and scheduling before creating service.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase services table (reviewed migration after approval; do not apply the development seed to production)",
+        "src/booking/slotMath.js",
+        "supabase/functions/create-booking"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "essential-bridal",
+      "classification": [
+        "A",
+        "B",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": {
+        "name": "Essential Bridal Package",
+        "priceFromUsd": 600,
+        "durationMinutes": 90,
+        "includes": [
+          "Bridal application",
+          "Skin preparation",
+          "Choice of finish",
+          "Mink lashes",
+          "Touch-up kit",
+          "Setting spray",
+          "Pre-wedding session described"
+        ],
+        "groupAndAllDayEmail": "takidamakeup@gmail.com"
+      },
+      "currentProject": {
+        "id": "bridal-makeup",
+        "priceFromUsd": 225,
+        "durationMinutes": 120,
+        "separateBridalTrial": {
+          "priceFromUsd": 165,
+          "durationMinutes": 60
+        },
+        "confirmed": false
+      },
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm package vs single appointment, trial inclusion/scheduling and unrelated-looking email.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase services table (reviewed migration after approval; do not apply the development seed to production)"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "unmatched-local-services",
+      "classification": [
+        "A",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": null,
+      "currentProject": {
+        "soft-glam": [
+          125,
+          60
+        ],
+        "special-event-glam": [
+          135,
+          60
+        ],
+        "bridal-trial": [
+          165,
+          60
+        ],
+        "1-on-1-makeup-lesson": [
+          175,
+          90
+        ]
+      },
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Missing externally does not justify deleting local services. Confirm catalog and all durations.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase services table (reviewed migration after approval; do not apply the development seed to production)"
+      ],
+      "approvedValue": null
+    }
+  ],
+  "contact": [
+    {
+      "id": "phone",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/contact",
+      "observedValue": "+15405550148",
+      "currentProject": "+15712669829 (confirmed in local config)",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Conflict; secondary number looks like sample data and ownership is unverified. Preserve current phone.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase/functions/_shared/businessInfo.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "email",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/contact",
+      "observedValue": "makeupbyemma2020@gmail.com",
+      "currentProject": "emmanuellesingani23@gmail.com",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm ownership and intended general/booking address before changing any recipient.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase/functions/_shared/businessInfo.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "bridal-email",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": "takidamakeup@gmail.com",
+      "currentProject": null,
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm this address actually belongs to this business. Do not route inquiries there.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "instagram",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/contact",
+      "observedValue": "https://www.instagram.com/make_up_byemma",
+      "currentProject": [
+        "https://www.instagram.com/emma_sing84",
+        "https://www.instagram.com/emma_sing2"
+      ],
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm official account(s); no logged-in social account inspection performed.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "whatsapp",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/contact",
+      "observedValue": "https://wa.me/15405550148",
+      "currentProject": null,
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Linked to conflicting phone. Confirm WhatsApp availability and number.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "location",
+      "classification": [
+        "A",
+        "E",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/contact",
+      "observedValue": {
+        "city": "Stafford, Virginia",
+        "serviceArea": "DMV; worldwide",
+        "streetAddress": null
+      },
+      "currentProject": "60 Susa Dr, Suite 121, Stafford, VA 22554; Fredericksburg & DMV",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "City overlaps, worldwide scope and address-by-email instruction need confirmation. Preserve precise local address.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase/functions/_shared/businessInfo.js"
+      ],
+      "approvedValue": null
+    }
+  ],
+  "deposit": {
+    "id": "deposit",
+    "classification": [
+      "A",
+      "F",
+      "G"
+    ],
+    "source": "https://emma-mackup.netlify.app/#/policy",
+    "observedValue": {
+      "type": "fixed",
+      "amountUsd": 50,
+      "refundable": false,
+      "transferable": false
+    },
+    "currentProject": {
+      "client": {
+        "type": null,
+        "value": null
+      },
+      "serverTestDefault": {
+        "type": "percentage",
+        "value": 30,
+        "isConfirmed": false
+      }
+    },
+    "status": "CLIENT CONFIRMATION REQUIRED",
+    "reason": "Confirm amount, policy, exceptions and effective date; monetary calculation stays server-side.",
+    "potentialTargets": [
+      "src/config/business.js",
+      "supabase/functions/_shared/depositConfig.js"
+    ],
+    "approvedValue": null
+  },
+  "policies": [
+    {
+      "id": "balances",
+      "classification": [
+        "A",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "ordinaryBalance": "Cash only on appointment day",
+        "bridalBalanceDeadlineDaysBeforeWedding": 30
+      },
+      "currentProject": "Policy bodies null; Stripe deposit lifecycle implemented.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Would change accepted payment terms and bridal lifecycle, not merely copy.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase booking_policies",
+        "supabase/functions/create-payment-intent"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "after-hours",
+      "classification": [
+        "A",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "feeUsd": 30,
+        "before": "07:00",
+        "after": "19:00"
+      },
+      "currentProject": "No confirmed surcharges.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Thresholds are fee rules, not opening hours; timezone and stacking require confirmation.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "server pricing/availability"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "sunday",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "feeUsd": 30,
+        "channel": "Email booking only"
+      },
+      "currentProject": "Sunday closed in unconfirmed seed.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm Sunday availability and surcharge; do not open slots automatically.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase availability_rules",
+        "server pricing"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "travel",
+      "classification": [
+        "A",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "startingFeeUsd": 25,
+        "outOfStateAccommodation": "Client covers accommodation"
+      },
+      "currentProject": "Travel policy null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Explain interaction with $300 mobile package, 15-mile inclusion and $5/mile; confirm region.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "server pricing/availability"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "late",
+      "classification": [
+        "A",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "feeAt15MinutesUsd": 25,
+        "additionalPerMinuteUsd": 1,
+        "cancelAfterMinutes": 30
+      },
+      "currentProject": "Late/no-show policy null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm thresholds, exceptions, amount handling and cancellation consequences.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase booking_policies"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "reschedule",
+      "classification": [
+        "A",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "allowedTimes": 1,
+        "minimumNoticeHours": 24
+      },
+      "currentProject": "Cancellation/rescheduling policy null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Resolve how rescheduling works with non-transferable deposit and refunds.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase booking_policies",
+        "future server rescheduling flow"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "cancellation-no-show",
+      "classification": [
+        "A",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "depositNonRefundable": true,
+        "lateCancellationAfterMinutes": 30,
+        "ordinaryCancellationNotice": null,
+        "noShowAdditionalCharge": null
+      },
+      "currentProject": "Policies null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "General cancellation, artist cancellation, refunds, no-show consequences and exceptions remain missing.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase booking_policies"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "preparation",
+      "classification": [
+        "A",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/policy",
+      "observedValue": {
+        "checkConfirmationDetails": [
+          "Address",
+          "Date",
+          "Time",
+          "Service"
+        ],
+        "clientSkinPreparationInstructions": null
+      },
+      "currentProject": "Appointment-prep policy null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Skin prep performed by artist is not an instruction for clients. Request actual preparation instructions.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "supabase booking_policies"
+      ],
+      "approvedValue": null
+    }
+  ],
+  "hours": {
+    "id": "business-hours",
+    "classification": [
+      "A",
+      "F",
+      "G"
+    ],
+    "source": "https://emma-mackup.netlify.app/#/policy",
+    "observedValue": {
+      "weeklyHours": null,
+      "afterHoursThresholds": [
+        "07:00",
+        "19:00"
+      ],
+      "sundayViaEmail": true
+    },
+    "currentProject": "Unconfirmed seed: Monday–Friday 09:00–18:00; Saturday 10:00–16:00; Sunday closed; 15-minute buffer.",
+    "status": "CLIENT CONFIRMATION REQUIRED",
+    "reason": "Do not infer operating hours from surcharges.",
+    "potentialTargets": [
+      "supabase availability_rules",
+      "src/booking/mockAvailability.js"
+    ],
+    "approvedValue": null
+  },
+  "about": [
+    {
+      "id": "brand-name",
+      "classification": [
+        "B",
+        "F",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/",
+      "observedValue": "Makeup-byaEmma",
+      "currentProject": "Makeup-by Emma",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Preserve official brand. Secondary spelling/monogram is not an approved identity.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "bio-claims",
+      "classification": [
+        "A",
+        "B",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/about",
+      "observedValue": {
+        "established": 2013,
+        "experienceYearsMinimum": 12,
+        "facesMinimum": 600,
+        "weddingsMinimum": 180,
+        "responseHours": 24,
+        "qualifications": [
+          "Licensed",
+          "Fully insured",
+          "Master-level continued education",
+          "Single-use sanitary application",
+          "All skin tones",
+          "Airbrush"
+        ],
+        "products": [
+          "Danessa Myricks",
+          "Pat McGrath",
+          "MAC Pro",
+          "Charlotte Tilbury"
+        ]
+      },
+      "currentProject": "Short provisional bio; final biography required.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Request factual biography, supporting credentials, approved product list, response commitment and dated statistics.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "process",
+      "classification": [
+        "B",
+        "C",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/about",
+      "observedValue": [
+        "Consultation",
+        "Trial",
+        "Appointment",
+        "Touch-up plan"
+      ],
+      "currentProject": "General personalized-service positioning.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Confirm actual included steps by service before promising trials/touch-up kits.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    }
+  ],
+  "faq": [
+    {
+      "id": "booking-lead-time",
+      "classification": [
+        "A",
+        "B",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": {
+        "weddingsMonths": [
+          6,
+          12
+        ],
+        "peakWeddingSeason": "May–October",
+        "eventOrShootWeeks": [
+          2,
+          4
+        ]
+      },
+      "currentProject": null,
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "These are unverified business recommendations; confirm before publishing.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "faq-other-topics",
+      "classification": [
+        "B",
+        "C",
+        "E",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/services",
+      "observedValue": [
+        "Travel",
+        "Bridal trial",
+        "Products",
+        "Deposit",
+        "Rescheduling and lateness"
+      ],
+      "currentProject": "Policies accordion; no dedicated FAQ.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Topic ideas useful, answers inherit the conflicts and unknowns above.",
+      "potentialTargets": [
+        "src/config/business.js",
+        "src/components/PoliciesSection.jsx"
+      ],
+      "approvedValue": null
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "ashley",
+      "classification": [
+        "B",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/",
+      "observedValue": {
+        "author": "Ashley M.",
+        "role": "Bride",
+        "location": "Fredericksburg, VA",
+        "summary": "Reports a personalized wedding look and compliments.",
+        "image": "/images/portfolio-04.jpg"
+      },
+      "currentProject": "Quote and client name null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Obtain original review, permission and matching image consent; no authenticity evidence on source.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "marcus",
+      "classification": [
+        "B",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/",
+      "observedValue": {
+        "author": "Marcus D.",
+        "role": "Creative Director",
+        "location": "Washington, D.C.",
+        "summary": "Praises understanding creative direction and camera results.",
+        "image": "/images/portfolio-02.jpg"
+      },
+      "currentProject": "Quote and client name null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Obtain original review and publication permission.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    },
+    {
+      "id": "nia",
+      "classification": [
+        "B",
+        "G"
+      ],
+      "source": "https://emma-mackup.netlify.app/#/",
+      "observedValue": {
+        "author": "Nia R.",
+        "role": "Private Client",
+        "location": "Alexandria, VA",
+        "summary": "Reports gala compliments and eight-hour wear.",
+        "image": "/images/portfolio-03.jpg"
+      },
+      "currentProject": "Quote and client name null.",
+      "status": "CLIENT CONFIRMATION REQUIRED",
+      "reason": "Obtain original review and publication permission; do not adopt wear claim as guarantee.",
+      "potentialTargets": [
+        "src/config/business.js"
+      ],
+      "approvedValue": null
+    }
+  ],
+  "images": {
+    "status": "CLIENT CONFIRMATION REQUIRED",
+    "manifest": "public-assets.json",
+    "reason": "Public accessibility is not proof of authorship, client identity or permission. Preserve approved local photography."
+  }
+}

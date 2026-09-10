@@ -48,6 +48,8 @@ const ServicesSection = () => {
               <div className="font-brand-display text-[14px] text-brand-text">{service.name}</div>
               <div className="text-[10.5px] text-brand-text-faint">
                 {service.duration} · From ${service.priceFrom}
+                {!service.priceConfirmed && ' · Price pending confirmation'}
+                {!service.durationConfirmed && ' · Duration pending confirmation'}
               </div>
             </div>
             <span className="text-[10px] tracking-[.12em] text-brand-gold-deep uppercase">Book</span>
@@ -77,9 +79,19 @@ const ServicesSection = () => {
               <p className="flex-1 text-[12px] leading-[1.6] text-brand-text-muted">
                 {service.description}
               </p>
+              {service.includes && (
+                <ul className="space-y-1 text-[10.5px] leading-[1.5] text-brand-text-faint">
+                  {service.includes.map((item) => <li key={item}>• {item}</li>)}
+                </ul>
+              )}
+              {service.note && (
+                <p className="text-[10.5px] leading-[1.5] text-brand-copper-deep italic">{service.note}</p>
+              )}
               <div className="text-[11px] text-brand-text-faint">
                 {service.duration} · From{' '}
                 <span className="text-brand-text">${service.priceFrom}</span>
+                {!service.priceConfirmed && ' · Price pending confirmation'}
+                {!service.durationConfirmed && ' · Duration pending confirmation'}
               </div>
               <a
                 href="#rendez-vous"
@@ -97,18 +109,21 @@ const ServicesSection = () => {
         {addOnServices.map((addOn) => (
           <div
             key={addOn.id}
-            className="flex flex-wrap items-center justify-between gap-2 bg-brand-ivory px-5 py-4 text-[12.5px] text-brand-text"
+            className="flex flex-wrap items-center justify-between gap-3 bg-brand-ivory px-5 py-4 text-[12.5px] text-brand-text"
           >
-            <span>
-              {addOn.name} · <span className="text-brand-text-faint">{addOn.duration}</span>
+            <span className="min-w-[220px] flex-1">
+              {addOn.name}
+              {addOn.duration && <> · <span className="text-brand-text-faint">{addOn.duration}</span></>}
+              {addOn.note && <span className="mt-1 block text-[11px] leading-relaxed text-brand-text-faint">{addOn.note}</span>}
             </span>
             <span className="text-brand-text-faint">
               From <span className="text-brand-text">${addOn.priceFrom}</span>
+              {!addOn.priceConfirmed && ' · Price pending confirmation'}
               <a
-                href="#rendez-vous"
+                href={addOn.bookable === false ? '#contact' : '#rendez-vous'}
                 className="link-underline ml-4 text-[11px] tracking-[.1em] text-brand-gold-deep uppercase"
               >
-                Book
+                {addOn.bookable === false ? 'Inquire' : 'Book'}
               </a>
             </span>
           </div>

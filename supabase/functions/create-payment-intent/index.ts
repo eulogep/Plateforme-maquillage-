@@ -122,10 +122,9 @@ Deno.serve(async (req) => {
       })
     }
 
-    // --- Authoritative deposit calculation. depositConfig is NOT an
-    //     Emmanuelle-confirmed policy (see _shared/depositConfig.js) —
-    //     whatever it currently is gets snapshotted onto the appointment
-    //     below so a later config change never alters this booking. ---
+    // --- Authoritative deposit calculation. The confirmed configuration
+    //     lives in _shared/depositConfig.js and is snapshotted onto the
+    //     appointment so later policy changes never alter this booking. ---
     const { amountDueNowCents, remainingBalanceCents, depositType, depositValue } = calculateDeposit(
       service.price_cents,
       depositConfig

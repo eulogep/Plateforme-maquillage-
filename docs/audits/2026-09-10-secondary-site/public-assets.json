@@ -1,0 +1,94 @@
+{
+  "observedAt": "2026-09-10",
+  "htmlSha256": "7e9bc99aa1cd1ddf3c9a18cab988b98f52c61f41756622f64f7612b5b4ca7829",
+  "assets": [
+    {
+      "url": "https://emma-mackup.netlify.app/images/artist.jpg",
+      "httpStatus": 200,
+      "bytes": 65932,
+      "sha256": "d13ab2ff0ecf87e91195a7d956a7447267cf97aa6647f3ef21b3a3e072491c8f",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/hero.jpg",
+      "httpStatus": 200,
+      "bytes": 133544,
+      "sha256": "01a3c7a53c33f462551947694f27d6c85472c7480bed42fa48b37c7bca668d2e",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-01.jpg",
+      "httpStatus": 200,
+      "bytes": 222862,
+      "sha256": "9c17ecebfb2af9e0cd8ff4a21695bc43468b93d1503c3de927a851d352448c09",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-02.jpg",
+      "httpStatus": 200,
+      "bytes": 165944,
+      "sha256": "d732fb00d69dc73247cbe76df0ffc93ddc8b725010bd6096594e39d20357f470",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-03.jpg",
+      "httpStatus": 200,
+      "bytes": 287872,
+      "sha256": "bfde70b9df77089fbcf0b364069487f9f61c26349d611fc632f64a2a50dbab57",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-04.jpg",
+      "httpStatus": 200,
+      "bytes": 275272,
+      "sha256": "b1158284df3fc36adbd78c734349db4d2db9faa7b88771bb60bc802b90dfcbbd",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-05.jpg",
+      "httpStatus": 200,
+      "bytes": 33010,
+      "sha256": "b74a26a4361eba239efa3737118dfa5539454536aa908e92d044f339ad8e4c77",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-06.jpg",
+      "httpStatus": 200,
+      "bytes": 128245,
+      "sha256": "2be3b2bbba1e9816496b36d7deabb517d44f2c66e5ec190278c366e7a93225db",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-07.jpg",
+      "httpStatus": 200,
+      "bytes": 247363,
+      "sha256": "d55299e6584eaa54e5c450d62b7f3aa4cd8590b7000a60f5e39895ba95d9f7e7",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-08.jpg",
+      "httpStatus": 200,
+      "bytes": 63953,
+      "sha256": "5530a4b12df5327e854e3d78937bd36dc4434dbbf5c54c636c242e002c514941",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    },
+    {
+      "url": "https://emma-mackup.netlify.app/images/portfolio-09.jpg",
+      "httpStatus": 200,
+      "bytes": 156413,
+      "sha256": "6f7d9c65432b850d278793b2d21be7de446d9cc39be699cac94a2503456ea095",
+      "exactLocalFileMatch": null,
+      "publicationRights": "CLIENT CONFIRMATION REQUIRED"
+    }
+  ]
+}

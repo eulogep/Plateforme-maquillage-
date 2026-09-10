@@ -1,10 +1,9 @@
 import { portfolioImages } from '@/assets/portfolio'
-import { about, business, testimonial } from '@/config/business'
+import { about, business, testimonials } from '@/config/business'
 
 // Combined "About + Kind Words" section per the frozen design: a three-column
-// grid on desktop (About / photo / Testimonial), stacked on mobile. The
-// testimonial is rendered as an explicit placeholder — the design has no
-// real client quote yet, so none is invented here.
+// grid on desktop (About / photo / Testimonials), stacked on mobile. Content
+// was confirmed after the secondary-site audit on 2026-09-10.
 //
 // This is the one place the artist's personal name belongs: it is biography,
 // not branding, so it stays "Emmanuelle" even though the business now trades
@@ -24,8 +23,9 @@ const AboutSection = () => {
           Artistry with <span className="italic text-brand-copper">intention.</span>
         </h2>
         <p className="text-[13px] leading-[1.7] text-brand-text-muted">
-          {about.bio} <span className="text-brand-text-faint">{about.bioPlaceholder}</span>
+          {about.bio} {about.bioPlaceholder && <span className="text-brand-text-faint">{about.bioPlaceholder}</span>}
         </p>
+        <p className="font-brand-display text-[15px] text-brand-copper italic">“{about.philosophy}”</p>
         <div className="text-[12px] text-brand-text-faint">
           {business.location.full} — serving {business.location.areaServed}.
         </div>
@@ -39,6 +39,14 @@ const AboutSection = () => {
             </span>
           ))}
         </div>
+        <dl className="mt-1 grid grid-cols-3 gap-3 border-t border-brand-rule pt-4">
+          {about.stats.map((stat) => (
+            <div key={stat.label}>
+              <dt className="text-[9px] tracking-[.08em] text-brand-text-faint uppercase">{stat.label}</dt>
+              <dd className="font-brand-display text-[18px] text-brand-text">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
         <a
           href="#histoire"
           className="link-underline mt-2 w-fit pb-[3px] text-[11.5px] tracking-[.08em] text-brand-text uppercase"
@@ -63,19 +71,14 @@ const AboutSection = () => {
         <div className="text-[10.5px] tracking-[.22em] text-brand-gold-deep uppercase">
           Kind Words
         </div>
-        {/* Decorative only — the script face is never used for readable copy. */}
-        <div
-          aria-hidden="true"
-          className="font-brand-script text-[52px] leading-none text-brand-champagne"
-        >
-          &ldquo;
-        </div>
-        <p className="-mt-6 font-brand-display text-[16px] leading-[1.6] text-brand-text-muted italic">
-          {testimonial.quote ?? testimonial.quotePlaceholder}
-        </p>
-        <div className="text-[11.5px] text-brand-text-faint">
-          — {testimonial.clientName ?? testimonial.clientNamePlaceholder}
-        </div>
+        {testimonials.map((testimonial) => (
+          <blockquote key={testimonial.clientName} className="border-b border-brand-rule pb-4 last:border-0">
+            <p className="font-brand-display text-[14px] leading-[1.6] text-brand-text-muted italic">
+              “{testimonial.quote}”
+            </p>
+            <footer className="mt-2 text-[10.5px] text-brand-text-faint">— {testimonial.clientName}</footer>
+          </blockquote>
+        ))}
       </div>
     </section>
   )

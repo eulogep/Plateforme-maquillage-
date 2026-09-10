@@ -95,7 +95,7 @@ Both are uploaded to the public `email-assets` bucket:
 | `ctaButton` | Bulletproof button: a background-colored `<table>` cell around a real `<a>`, never an image, so it stays clickable and legible with images off |
 | `textLink` | Secondary plain-text link (e.g. "View booking details") |
 | `preparationNote` | Optional prep-instructions section — renders nothing unless the caller supplies real text (never invents one) |
-| `footer` | Dark ink footer: business name, address, email, Instagram; phone omitted entirely when not confirmed |
+| `footer` | Dark ink footer: business name, address, email and confirmed primary phone |
 
 Every component escapes its inputs (`&`, `<`, `>`) and every optional field
 is simply omitted from the output when absent — no template ever renders

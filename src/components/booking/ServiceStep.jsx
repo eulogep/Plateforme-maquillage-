@@ -48,9 +48,11 @@ const ServiceStep = ({ serviceId, onSelect, onContinue }) => {
               <div className="absolute right-4 bottom-2.5 left-4 text-brand-on-dark">
                 <div className="font-brand-display text-[13.5px]">
                   {service.name} · {service.duration}
+                  {!service.durationConfirmed && ' (duration pending)'}
                 </div>
                 <div className="mt-0.5 text-[10px] text-brand-on-dark-muted">
                   {service.description} · From {`$${service.priceFrom}`}
+                  {!service.priceConfirmed && ' (price pending)'}
                 </div>
               </div>
             </button>
@@ -60,7 +62,7 @@ const ServiceStep = ({ serviceId, onSelect, onContinue }) => {
 
       {addOnServices.length > 0 && (
         <div className="flex flex-col gap-px border border-brand-rule bg-brand-rule">
-          {addOnServices.map((addOn) => {
+          {addOnServices.filter((addOn) => addOn.bookable !== false).map((addOn) => {
             const isSelected = serviceId === addOn.id
             return (
               <button
@@ -80,8 +82,11 @@ const ServiceStep = ({ serviceId, onSelect, onContinue }) => {
                 <span className="flex items-center gap-2">
                   {isSelected && <Check className="h-3.5 w-3.5 text-brand-copper-deep" strokeWidth={3} />}
                   {addOn.name} · <span className="text-brand-text-faint">{addOn.duration}</span>
+                  {!addOn.durationConfirmed && ' (duration pending)'}
                 </span>
-                <span className="text-brand-text-faint">From ${addOn.priceFrom}</span>
+                <span className="text-brand-text-faint">
+                  From ${addOn.priceFrom}{!addOn.priceConfirmed && ' · Pending'}
+                </span>
               </button>
             )
           })}

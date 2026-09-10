@@ -1,0 +1,51 @@
+{
+  "confirmedAt": "2026-09-10",
+  "confirmation": "The client accepted the secondary-site information and explicitly requested that both phone numbers be retained.",
+  "brandSourceOfTruth": "Current official Makeup-by Emma identity",
+  "phones": {
+    "primary": "+15712669829",
+    "additional": "+15405550148",
+    "publiclyDisplayed": true
+  },
+  "applied": {
+    "generalEmail": "makeupbyemma2020@gmail.com",
+    "bridalEmail": "takidamakeup@gmail.com",
+    "instagramPrimary": "https://www.instagram.com/make_up_byemma",
+    "whatsapp": "https://wa.me/15405550148",
+    "responseTime": "Within 24 hours",
+    "areaServed": "Fredericksburg, the DMV & worldwide",
+    "deposit": {
+      "type": "fixed",
+      "amountCents": 5000,
+      "refundable": false,
+      "transferable": false
+    },
+    "confirmedServices": [
+      { "id": "natural-glam", "name": "Basic Glam", "priceCents": 13000 },
+      { "id": "full-glam", "name": "Signature Glam", "priceCents": 15000 },
+      { "id": "bridal-makeup", "name": "Essential Bridal Package", "priceCents": 60000, "durationMinutes": 90 },
+      { "id": "on-demand-glam", "name": "The On Demand Glam", "priceCents": 30000, "bookableOnline": false }
+    ],
+    "policies": true,
+    "faq": true,
+    "bio": true,
+    "statistics": true,
+    "testimonials": true
+  },
+  "stillUnresolvedBecauseTheSecondarySiteContainsNoValue": {
+    "businessHours": true,
+    "basicGlamDuration": true,
+    "signatureGlamDuration": true,
+    "onDemandGlamDuration": true,
+    "softGlamPriceAndDuration": true,
+    "legacyAddOnPricesAndDurations": true,
+    "generalCancellationNotice": true,
+    "specificNoShowConsequences": true,
+    "detailedClientPreparationInstructions": true
+  },
+  "deployment": {
+    "databaseMigrationCreated": "supabase/migrations/20260910000001_confirm_business_details.sql",
+    "remoteDatabaseModified": false,
+    "siteDeployed": false
+  }
+}

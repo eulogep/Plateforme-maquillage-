@@ -111,6 +111,8 @@ function PaymentForm({ service, intentData, onBack, onPaid }) {
   const stripe = useStripe()
   const elements = useElements()
   const [submitState, setSubmitState] = useState({ status: 'idle', errorMessage: null })
+  const remainingBalanceDue =
+    service?.id === 'bridal-makeup' ? 'due 30 days before the wedding' : 'due in cash at the appointment'
 
   const handlePay = async () => {
     if (!stripe || !elements) return
@@ -159,7 +161,7 @@ function PaymentForm({ service, intentData, onBack, onPaid }) {
         </div>
         <div className="flex justify-between text-brand-text-faint">
           <span>Remaining balance</span>
-          <span className="text-right">{formatCents(intentData.remainingBalanceCents)}, due at appointment</span>
+          <span className="text-right">{formatCents(intentData.remainingBalanceCents)}, {remainingBalanceDue}</span>
         </div>
         {!intentData.depositConfirmed && (
           <div className="mt-1 text-[10.5px] text-brand-text-faint">

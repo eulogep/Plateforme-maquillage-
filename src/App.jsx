@@ -8,6 +8,7 @@ import ServicesSection from './components/ServicesSection'
 import ArtistrySection from './components/ArtistrySection'
 import AboutSection from './components/AboutSection'
 import PoliciesSection from './components/PoliciesSection'
+import FaqSection from './components/FaqSection'
 import FinalCta from './components/FinalCta'
 import Footer from './components/Footer'
 
@@ -61,6 +62,7 @@ function App() {
           <ArtistrySection />
           <AboutSection />
           <PoliciesSection />
+          <FaqSection />
           <FinalCta />
           <Suspense fallback={<BookingFlowFallback />}>
             <BookingFlow />

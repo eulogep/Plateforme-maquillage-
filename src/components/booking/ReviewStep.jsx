@@ -28,11 +28,18 @@ const ReviewStep = ({ bookingData, policiesAccepted, onTogglePolicies, submissio
         <Row label="Service" value={service?.name ?? '—'} />
         <Row label="Date" value={formatDateLong(bookingData.date)} />
         <Row label="Time" value={formatTimeLabel(bookingData.time)} />
-        <Row label="Duration" value={service?.duration ?? '—'} />
+        <Row
+          label="Duration"
+          value={service ? `${service.duration}${service.durationConfirmed ? '' : ' (pending confirmation)'}` : '—'}
+        />
         <Row label="Location" value={business.location.full} />
         <div className="mt-0.5 flex justify-between border-t border-brand-rule pt-2">
           <span>Price</span>
-          <span>{service ? `${formatPrice(service.priceFrom)} (est.)` : '—'}</span>
+          <span>
+            {service
+              ? `${formatPrice(service.priceFrom)}${service.priceConfirmed ? '' : ' (pending confirmation)'}`
+              : '—'}
+          </span>
         </div>
       </div>
 
