@@ -1,6 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=Parisienne&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -40,382 +40,347 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /*
+   * Official Makeup-by Emma brand palette (Milestone 6.5), exposed as
+   * Tailwind utilities: bg-brand-black, text-brand-champagne,
+   * border-brand-gold, etc.
+   */
+  --color-brand-black: var(--brand-black);
+  --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-champagne: var(--brand-champagne);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-gold-soft: var(--brand-gold-soft);
+  --color-brand-gold-deep: var(--brand-gold-deep);
+  --color-brand-powder-pink: var(--brand-powder-pink);
+  --color-brand-nude: var(--brand-nude);
+  --color-brand-ivory: var(--brand-ivory);
+  --color-brand-ivory-soft: var(--brand-ivory-soft);
+  --color-brand-taupe: var(--brand-taupe);
+  --color-brand-copper: var(--brand-copper);
+  --color-brand-copper-deep: var(--brand-copper-deep);
+
+  /* Text tints — every one of these meets WCAG AA on its intended ground. */
+  --color-brand-text: var(--brand-text);
+  --color-brand-text-muted: var(--brand-text-muted);
+  --color-brand-text-faint: var(--brand-text-faint);
+  --color-brand-on-dark: var(--brand-on-dark);
+  --color-brand-on-dark-muted: var(--brand-on-dark-muted);
+  --color-brand-danger: var(--brand-danger);
+  --color-brand-danger-deep: var(--brand-danger-deep);
+
+  /* Hairlines and separators. */
+  --color-brand-rule: var(--brand-rule);
+  --color-brand-rule-dark: var(--brand-rule-dark);
+
+  --font-brand-display: var(--font-display);
+  --font-brand-ui: var(--font-ui);
+  --font-brand-script: var(--font-script);
 }
 
 :root {
   --radius: 0.625rem;
-  
-  /* Emotional Color Palette */
-  --nude-warm: #F5E6D3;
-  --beige-rose: #E8D5C4;
-  --champagne: #F7E7CE;
-  --gold-soft: #D4AF37;
-  --copper: #B87333;
-  --cacao: #7B3F00;
-  --terracotta: #E2725B;
-  --coral-soft: #FF7F7F;
-  --velvet-black: #1C1C1C;
-  --anthracite: #36454F;
-  --cream: #FFF8F0;
-  --warm-white: #FEFCF8;
-  
-  /* Converted to OKLCH for consistency */
-  --background: oklch(0.98 0.02 45);
-  --foreground: oklch(0.15 0 0);
-  --card: oklch(0.97 0.03 45);
-  --card-foreground: oklch(0.15 0 0);
-  --popover: oklch(0.97 0.03 45);
-  --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.55 0.12 35);
-  --primary-foreground: oklch(0.98 0.02 45);
-  --secondary: oklch(0.88 0.04 45);
-  --secondary-foreground: oklch(0.15 0 0);
-  --muted: oklch(0.90 0.03 45);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.70 0.15 65);
-  --accent-foreground: oklch(0.15 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.85 0.04 45 / 0.3);
-  --input: oklch(0.97 0.03 45);
-  --ring: oklch(0.55 0.12 35);
-  
-  /* Typography */
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
-  
-  /* Shadows */
-  --shadow-soft: 0 4px 20px oklch(0.55 0.12 35 / 0.1);
-  --shadow-warm: 0 8px 32px oklch(0.65 0.15 25 / 0.15);
-  --shadow-luxury: 0 12px 40px oklch(0.70 0.15 65 / 0.2);
-  
-  /* Chart colors remain the same */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  
-  /* Sidebar colors */
-  --sidebar: oklch(0.97 0.03 45);
-  --sidebar-foreground: oklch(0.15 0 0);
-  --sidebar-primary: oklch(0.55 0.12 35);
-  --sidebar-primary-foreground: oklch(0.98 0.02 45);
-  --sidebar-accent: oklch(0.90 0.03 45);
-  --sidebar-accent-foreground: oklch(0.15 0 0);
-  --sidebar-border: oklch(0.85 0.04 45 / 0.3);
-  --sidebar-ring: oklch(0.55 0.12 35);
+
+  /*
+   * ---------------------------------------------------------------
+   * OFFICIAL MAKEUP-BY EMMA BRAND PALETTE
+   * ---------------------------------------------------------------
+   * Source of truth: the client-supplied brand board plus the official
+   * logo PNGs in src/assets/brand/.
+   *
+   * The black and the gold ramp are SAMPLED from the official emblem
+   * artwork (decoded pixel values), not estimated: the emblem's disc is
+   * #0B0B0A and its gold gradient runs #FCE6B0 (highlight) -> #E1B472
+   * (champagne) -> #C29050 (metallic) -> #996630 (shadow).
+   *
+   * Powder Pink, Nude Beige, Ivory, Taupe and Copper are matched by eye
+   * from the board's swatch strip, which prints no hex codes. If official
+   * values exist, replace them here and nowhere else.
+   */
+
+  /* Board: NOIR PROFOND */
+  --brand-black: #0B0B0A;
+  --brand-charcoal: #171310;
+
+  /* Board: CHAMPAGNE GOLD / DORÉ MÉTALLIQUE */
+  --brand-gold-soft: #F2DDB4; /* highlight — on-dark accents */
+  --brand-champagne: #E1B472; /* the primary gold */
+  --brand-gold: #C29050; /* metallic — hairlines, borders */
+  --brand-gold-deep: #8B6428; /* the only gold dark enough for text on ivory */
+
+  /* Board: ROSE POUDRÉ / BEIGE NUDE */
+  --brand-powder-pink: #EBD3CF;
+  --brand-nude: #DCC3A6;
+
+  /* Board: IVOIRE */
+  --brand-ivory: #FBF3E7;
+  --brand-ivory-soft: #F5EAD9;
+
+  /* Board: TAUPE / CUIVRE */
+  --brand-taupe: #AFA08D;
+  --brand-copper: #A5643D;
+  --brand-copper-deep: #8B5130;
+
+  /*
+   * Text tints. Contrast is measured against the surface each one is used
+   * on, not assumed:
+   *   --brand-text        on ivory  ~14.7:1
+   *   --brand-text-muted  on ivory   ~7.9:1
+   *   --brand-text-faint  on ivory   ~5.1:1  (was #8A7A6C at ~3.4:1 — that
+   *                                  failed AA at the 10-12px sizes it was
+   *                                  used at, so it is darkened here)
+   *   --brand-on-dark     on black  ~15.1:1
+   *   --brand-on-dark-muted on black ~10.2:1
+   */
+  --brand-text: #241F1B;
+  --brand-text-muted: #5C4F44;
+  --brand-text-faint: #6E5F52;
+  --brand-on-dark: #F0E9E0;
+  --brand-on-dark-muted: #C9BFB4;
+
+  /* Semantic status. Red is kept for errors — no brand color may be the
+     sole carrier of "something went wrong". */
+  --brand-danger: #B23B3B;
+  --brand-danger-deep: #8A2E2E;
+
+  /* Gold hairlines. Gold carries no text here, so contrast ratios don't
+     apply; these are the board's recurring thin-rule detail. */
+  --brand-rule: rgba(194, 144, 80, 0.32); /* on ivory */
+  --brand-rule-dark: rgba(225, 180, 114, 0.28); /* on black */
+
+  /*
+   * Typography, following the board's three roles:
+   *   Script Élégante   -> --font-script, DECORATIVE ONLY
+   *   Serif Luxe        -> --font-display
+   *   Sans-serif Moderne-> --font-ui
+   * The script face is never used for paragraphs, forms, prices, labels or
+   * any accessibility-critical text.
+   */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Jost', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --font-script: 'Parisienne', 'Playfair Display', cursive;
+
+  /* Back-compat aliases for the two base-layer rules below. */
+  --font-heading: var(--font-display);
+  --font-body: var(--font-ui);
+
+  /*
+   * shadcn/ui primitives are re-derived from the brand palette so that
+   * form controls, focus rings and checkboxes inherit the identity instead
+   * of the old terracotta defaults. Deep black is the action color; gold
+   * is the accent.
+   */
+  --background: var(--brand-ivory);
+  --foreground: var(--brand-text);
+  --card: var(--brand-ivory-soft);
+  --card-foreground: var(--brand-text);
+  --popover: var(--brand-ivory);
+  --popover-foreground: var(--brand-text);
+  --primary: var(--brand-black);
+  --primary-foreground: var(--brand-champagne);
+  --secondary: var(--brand-ivory-soft);
+  --secondary-foreground: var(--brand-text);
+  --muted: var(--brand-ivory-soft);
+  --muted-foreground: var(--brand-text-faint);
+  --accent: var(--brand-powder-pink);
+  --accent-foreground: var(--brand-text);
+  --destructive: var(--brand-danger);
+  --border: var(--brand-rule);
+  --input: var(--brand-rule);
+  --ring: var(--brand-gold-deep);
+
+  --chart-1: var(--brand-champagne);
+  --chart-2: var(--brand-copper);
+  --chart-3: var(--brand-taupe);
+  --chart-4: var(--brand-powder-pink);
+  --chart-5: var(--brand-charcoal);
+
+  --sidebar: var(--brand-ivory);
+  --sidebar-foreground: var(--brand-text);
+  --sidebar-primary: var(--brand-black);
+  --sidebar-primary-foreground: var(--brand-champagne);
+  --sidebar-accent: var(--brand-ivory-soft);
+  --sidebar-accent-foreground: var(--brand-text);
+  --sidebar-border: var(--brand-rule);
+  --sidebar-ring: var(--brand-gold-deep);
+
+  /* Restrained elevation — the board's look is flat and editorial, so
+     shadows stay barely-there rather than glossy. */
+  --shadow-soft: 0 2px 14px rgba(11, 11, 10, 0.06);
+  --shadow-lift: 0 10px 30px rgba(11, 11, 10, 0.10);
 }
 
 .dark {
-  --background: oklch(0.15 0 0);
-  --foreground: oklch(0.98 0.02 45);
-  --card: oklch(0.20 0 0);
-  --card-foreground: oklch(0.98 0.02 45);
-  --popover: oklch(0.20 0 0);
-  --popover-foreground: oklch(0.98 0.02 45);
-  --primary: oklch(0.70 0.15 65);
-  --primary-foreground: oklch(0.15 0 0);
-  --secondary: oklch(0.25 0 0);
-  --secondary-foreground: oklch(0.98 0.02 45);
-  --muted: oklch(0.25 0 0);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.55 0.12 35);
-  --accent-foreground: oklch(0.98 0.02 45);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.70 0.15 65);
+  --background: var(--brand-black);
+  --foreground: var(--brand-on-dark);
+  --card: var(--brand-charcoal);
+  --card-foreground: var(--brand-on-dark);
+  --popover: var(--brand-charcoal);
+  --popover-foreground: var(--brand-on-dark);
+  --primary: var(--brand-champagne);
+  --primary-foreground: var(--brand-black);
+  --secondary: var(--brand-charcoal);
+  --secondary-foreground: var(--brand-on-dark);
+  --muted: var(--brand-charcoal);
+  --muted-foreground: var(--brand-on-dark-muted);
+  --accent: var(--brand-copper);
+  --accent-foreground: var(--brand-on-dark);
+  --destructive: #D96666;
+  --border: var(--brand-rule-dark);
+  --input: var(--brand-rule-dark);
+  --ring: var(--brand-champagne);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-body);
+    font-family: var(--font-ui);
     overflow-x: hidden;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-display);
     font-weight: 600;
     line-height: 1.2;
+    text-wrap: balance;
   }
-  
-  /* Custom scrollbar */
+
+  /*
+   * A visible, brand-colored focus ring on every interactive element.
+   * Gold alone would be too low-contrast to carry this, so the ring uses
+   * the deep gold and is paired with an offset so it reads on both the
+   * ivory and the black surfaces.
+   */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--brand-gold-deep);
+    outline-offset: 2px;
+  }
+
+  .bg-brand-black :where(a, button, [tabindex]):focus-visible,
+  .bg-brand-charcoal :where(a, button, [tabindex]):focus-visible {
+    outline-color: var(--brand-champagne);
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
   }
-  
+
   ::-webkit-scrollbar-track {
-    background: oklch(0.88 0.04 45);
+    background: var(--brand-ivory-soft);
   }
-  
+
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.55 0.12 35);
-    border-radius: 4px;
+    background: var(--brand-taupe);
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.70 0.15 65);
+    background: var(--brand-gold);
   }
-  
-  /* Selection color */
+
   ::selection {
-    background: oklch(0.88 0.04 45);
-    color: oklch(0.15 0 0);
+    background: var(--brand-powder-pink);
+    color: var(--brand-text);
   }
 }
 
-/* Emotional Design Components */
 @layer components {
-  /* Breathing animation for buttons */
-  @keyframes breathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-  }
-  
-  .btn-breathe:hover {
-    animation: breathe 2s ease-in-out infinite;
-  }
-  
-  /* Soft reveal animation */
-  @keyframes softReveal {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .soft-reveal {
-    animation: softReveal 0.8s ease-out;
-  }
-  
-  /* Floating animation */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  .floating {
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  /* Gradient backgrounds */
-  .gradient-warm {
-    background: linear-gradient(135deg, 
-      oklch(0.88 0.04 45) 0%, 
-      oklch(0.85 0.06 35) 50%, 
-      oklch(0.90 0.03 45) 100%);
-  }
-  
-  .gradient-luxury {
-    background: linear-gradient(135deg, 
-      oklch(0.70 0.15 65) 0%, 
-      oklch(0.55 0.12 35) 100%);
-  }
-  
-  .gradient-sunset {
-    background: linear-gradient(135deg, 
-      oklch(0.65 0.15 25) 0%, 
-      oklch(0.70 0.12 35) 50%, 
-      oklch(0.88 0.04 45) 100%);
-  }
-  
-  /* Text gradient */
-  .text-gradient {
-    background: linear-gradient(135deg, 
-      oklch(0.55 0.12 35), 
-      oklch(0.70 0.15 65));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-  }
-  
-  /* Card hover effects */
-  .card-hover {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid var(--border);
-    background: var(--card);
-  }
-  
-  .card-hover:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-luxury);
-    border-color: oklch(0.70 0.15 65);
-  }
-  
-  /* Warm glow effect */
-  .warm-glow {
+  /*
+   * Micro-interactions. All of them are restrained by design: a gold
+   * underline that draws in, a slow image zoom, a small card lift. No
+   * bounce, no glow, no parallax.
+   */
+
+  /* Gold underline that draws in from the left on hover/focus. */
+  .link-underline {
     position: relative;
-    overflow: hidden;
+    text-decoration: none;
   }
-  
-  .warm-glow::before {
+
+  .link-underline::after {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, oklch(0.65 0.15 25 / 0.1) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    pointer-events: none;
-  }
-  
-  .warm-glow:hover::before {
-    opacity: 1;
-  }
-  
-  /* Luxury button styles */
-  .btn-luxury {
-    background: var(--gradient-luxury);
-    color: oklch(0.98 0.02 45);
-    border: none;
-    padding: 12px 32px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-family: var(--font-body);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-luxury::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-  }
-  
-  .btn-luxury:hover::before {
-    left: 100%;
-  }
-  
-  .btn-luxury:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-luxury);
-  }
-  
-  /* Emotional CTA styles */
-  .cta-emotional {
-    background: var(--gradient-sunset);
-    color: oklch(0.15 0 0);
-    border: none;
-    padding: 16px 40px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .cta-emotional:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: var(--shadow-warm);
-  }
-  
-  /* Texture overlay */
-  .texture-overlay {
-    position: relative;
-  }
-  
-  .texture-overlay::after {
-    content: '';
-    position: absolute;
-    top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background-image: 
-      radial-gradient(circle at 25% 25%, oklch(0.70 0.15 65 / 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, oklch(0.65 0.15 25 / 0.1) 0%, transparent 50%);
-    pointer-events: none;
+    bottom: -3px;
+    height: 1px;
+    background: var(--brand-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
-  /* African pattern */
-  .african-pattern {
-    background-image: 
-      radial-gradient(circle at 25% 25%, oklch(0.55 0.12 35 / 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, oklch(0.70 0.15 65 / 0.1) 0%, transparent 50%);
+
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    transform: scaleX(1);
   }
-  
-  /* Hero gradient */
-  .hero-gradient {
-    background: linear-gradient(135deg, 
-      oklch(0.88 0.04 45) 0%, 
-      oklch(0.85 0.06 35) 50%, 
-      oklch(0.90 0.03 45) 100%);
+
+  /* Slow, subtle zoom for portfolio and service photography. */
+  .img-zoom {
+    overflow: hidden;
   }
-  
-  /* Warm background sections */
-  .section-warm {
-    background: var(--gradient-warm);
-    position: relative;
+
+  .img-zoom img {
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
-  .section-luxury {
-    background: linear-gradient(135deg, 
-      oklch(0.15 0 0) 0%, 
-      oklch(0.25 0 0) 100%);
-    color: oklch(0.98 0.02 45);
+
+  .img-zoom:hover img,
+  .img-zoom:focus-within img {
+    transform: scale(1.04);
   }
-  
-  /* Soft borders */
-  .border-soft {
-    border: 2px solid oklch(0.55 0.12 35 / 0.2);
-    border-radius: 20px;
+
+  /* Soft card lift with a gold edge on hover. */
+  .card-lift {
+    transition:
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.4s ease;
   }
-  
-  .border-soft:hover {
-    border-color: oklch(0.70 0.15 65);
-    box-shadow: 0 0 20px oklch(0.70 0.15 65 / 0.3);
+
+  .card-lift:hover,
+  .card-lift:focus-within {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--brand-gold);
   }
-  
-  /* Image filters for warmth */
-  .img-warm {
-    filter: sepia(10%) saturate(110%) brightness(105%) contrast(95%);
-    transition: filter 0.3s ease;
-  }
-  
-  .img-warm:hover {
-    filter: sepia(15%) saturate(120%) brightness(110%) contrast(100%);
-  }
-  
-  /* Emotional spacing */
-  .emotional-spacing {
-    padding: 80px 0;
-  }
-  
-  /* Loading shimmer effect */
-  @keyframes shimmer {
-    0% { background-position: -200px 0; }
-    100% { background-position: calc(200px + 100%) 0; }
-  }
-  
-  .shimmer {
-    background: linear-gradient(90deg, 
-      oklch(0.90 0.03 45) 25%, 
-      oklch(0.88 0.04 45) 50%, 
-      oklch(0.90 0.03 45) 75%);
-    background-size: 200px 100%;
-    animation: shimmer 1.5s infinite;
+
+  /*
+   * A single thin gold rule, the board's recurring separator. Used under
+   * section eyebrows and beside the wordmark.
+   */
+  .rule-gold {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--brand-gold) 30%,
+      var(--brand-gold) 70%,
+      transparent
+    );
   }
 }
 
+/*
+ * Motion is decoration here, never information — so it can all be turned
+ * off without losing meaning.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .img-zoom:hover img,
+  .img-zoom:focus-within img,
+  .card-lift:hover,
+  .card-lift:focus-within {
+    transform: none;
+  }
+}

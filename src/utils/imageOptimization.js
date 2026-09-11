@@ -1,11 +1,12 @@
 // Image optimization utilities for better performance
 
 export const optimizeImage = (src, options = {}) => {
+  // Reserved for a future CDN integration (Cloudinary/ImageKit) — not read yet.
   const {
-    width = 800,
-    height = 600,
-    quality = 85,
-    format = 'webp'
+    width: _width = 800,
+    height: _height = 600,
+    quality: _quality = 85,
+    format: _format = 'webp'
   } = options;
 
   // For production, this would integrate with a service like Cloudinary or ImageKit
@@ -43,7 +44,7 @@ export const createImagePlaceholder = (width, height) => {
 
 export const lazyLoadImages = () => {
   if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
+    const imageObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target;
