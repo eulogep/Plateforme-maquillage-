@@ -164,6 +164,11 @@ export const selectedLooks = [
   { image: 'look-bridal-process', label: 'Bridal · process' },
   { image: 'look-special-event', label: 'Special Event Glam' },
   { image: 'look-creative-glam', label: 'Creative Glam' },
+  { image: 'look-reference-gems', label: 'Gems & Cut Crease' },
+  { image: 'look-reference-editorial', label: 'Editorial Portrait' },
+  { image: 'look-reference-evening', label: 'Evening Glow' },
+  { image: 'look-reference-natural', label: 'Natural Radiance' },
+  { image: 'look-reference-color', label: 'Graphic Color Pop' },
 ]
 
 export const about = {

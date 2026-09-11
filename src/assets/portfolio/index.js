@@ -11,6 +11,11 @@ import lookBridalProcess from './look-bridal-process.jpg'
 import lookSpecialEvent from './look-special-event.jpg'
 import lookCreativeGlam from './look-creative-glam.jpg'
 import aboutEmmanuelle from './about-emmanuelle.jpg'
+import lookReferenceGems from './look-reference-gems.jpg'
+import lookReferenceEditorial from './look-reference-editorial.jpg'
+import lookReferenceEvening from './look-reference-evening.jpg'
+import lookReferenceNatural from './look-reference-natural.jpg'
+import lookReferenceColor from './look-reference-color.jpg'
 
 export const portfolioImages = {
   'hero-precision-elevated': heroPrecisionElevated,
@@ -21,4 +26,9 @@ export const portfolioImages = {
   'look-special-event': lookSpecialEvent,
   'look-creative-glam': lookCreativeGlam,
   'about-emmanuelle': aboutEmmanuelle,
+  'look-reference-gems': lookReferenceGems,
+  'look-reference-editorial': lookReferenceEditorial,
+  'look-reference-evening': lookReferenceEvening,
+  'look-reference-natural': lookReferenceNatural,
+  'look-reference-color': lookReferenceColor,
 }
