@@ -1,5 +1,7 @@
+import { Expand } from 'lucide-react'
 import { portfolioImages } from '@/assets/portfolio'
 import { services, addOnServices, pricingDisclaimer } from '@/config/business'
+import { Lightbox, useLightbox } from '@/components/Lightbox'
 
 // Matches the frozen design's "Choose your experience" section: image-led
 // cards for the four primary services, plus a compact list for add-ons.
@@ -9,7 +11,18 @@ import { services, addOnServices, pricingDisclaimer } from '@/config/business'
 //
 // Service ids, names, durations, prices and CTA labels all come from
 // config/business.js unchanged — this section is presentation only.
+//
+// Each service photo opens the same full-size lightbox as the portfolio
+// (see Lightbox.jsx), with the same cursor-label affordance on desktop —
+// but only the image itself is the lightbox trigger. The "Book" CTA stays a
+// plain link straight to #rendez-vous, untouched, so the primary booking
+// action never gets swallowed by the "view photo" one.
 const ServicesSection = () => {
+  const { item, open, close } = useLightbox()
+
+  const openService = (service, event) =>
+    open({ src: portfolioImages[service.image], alt: service.headline, label: service.headline }, event)
+
   return (
     <section
       id="services"
@@ -28,30 +41,39 @@ const ServicesSection = () => {
         {pricingDisclaimer}
       </p>
 
-      {/* Mobile: compact rows */}
+      {/* Mobile: compact rows. The thumbnail and the rest of the row are
+          separate tap targets (a button and a link, siblings rather than
+          nested) so the photo can open the lightbox without hijacking the
+          row's "Book" action, or nesting a button inside an anchor. */}
       <div className="mb-8 flex flex-col gap-px bg-brand-rule lg:hidden">
         {services.map((service) => (
-          <a
-            key={service.id}
-            href="#rendez-vous"
-            className="flex items-center gap-3.5 bg-brand-ivory p-3 no-underline"
-          >
-            <div className="h-16 w-16 flex-none overflow-hidden">
+          <div key={service.id} className="flex items-center gap-3.5 bg-brand-ivory p-3">
+            <button
+              type="button"
+              onClick={(event) => openService(service, event)}
+              className="h-16 w-16 flex-none overflow-hidden"
+              aria-label={`View ${service.headline} photo`}
+            >
               <img
                 src={portfolioImages[service.image]}
                 alt={service.headline}
                 className="h-full w-full object-cover"
                 loading="lazy"
               />
-            </div>
-            <div className="flex flex-1 flex-col justify-center gap-1">
-              <div className="font-brand-display text-[14px] text-brand-text">{service.name}</div>
-              <div className="text-[10.5px] text-brand-text-faint">
-                {service.duration} · From ${service.priceFrom}
+            </button>
+            <a
+              href="#rendez-vous"
+              className="flex flex-1 items-center gap-3.5 no-underline"
+            >
+              <div className="flex flex-1 flex-col justify-center gap-1">
+                <div className="font-brand-display text-[14px] text-brand-text">{service.name}</div>
+                <div className="text-[10.5px] text-brand-text-faint">
+                  {service.duration} · From ${service.priceFrom}
+                </div>
               </div>
-            </div>
-            <span className="text-[10px] tracking-[.12em] text-brand-gold-deep uppercase">Book</span>
-          </a>
+              <span className="text-[10px] tracking-[.12em] text-brand-gold-deep uppercase">Book</span>
+            </a>
+          </div>
         ))}
       </div>
 
@@ -60,16 +82,29 @@ const ServicesSection = () => {
         {services.map((service) => (
           <div
             key={service.id}
-            className="card-lift img-zoom flex flex-col border border-brand-rule bg-brand-ivory"
+            className="card-lift flex flex-col border border-brand-rule bg-brand-ivory"
           >
-            <div className="h-[220px] overflow-hidden">
+            <button
+              type="button"
+              onClick={(event) => openService(service, event)}
+              data-cursor-label="View"
+              className="img-zoom group relative block h-[220px] w-full overflow-hidden text-left"
+              aria-label={`View ${service.headline} photo`}
+            >
               <img
                 src={portfolioImages[service.image]}
                 alt={service.headline}
                 className="h-full w-full object-cover"
                 loading="lazy"
               />
-            </div>
+              {/* Subtle "expand" affordance for anyone whose pointer isn't
+                  fine enough to trigger CustomCursor's own label. */}
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-brand-on-dark/70 bg-brand-black/40 backdrop-blur-sm">
+                  <Expand className="h-4 w-4 text-brand-on-dark" aria-hidden="true" />
+                </span>
+              </div>
+            </button>
             <div className="flex flex-1 flex-col gap-2.5 p-5">
               <div className="font-brand-display text-[19px] text-brand-text">
                 {service.headline}
@@ -114,6 +149,8 @@ const ServicesSection = () => {
           </div>
         ))}
       </div>
+
+      <Lightbox item={item} onClose={close} />
     </section>
   )
 }

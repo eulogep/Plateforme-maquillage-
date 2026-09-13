@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import './App.css'
 import ErrorBoundary from './components/ErrorBoundary'
+import CustomCursor from './components/CustomCursor'
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
 import SelectedLooks from './components/SelectedLooks'
@@ -53,6 +54,7 @@ function App() {
       </a>
 
       <ErrorBoundary>
+        <CustomCursor />
         <Header />
         <main id="main-content">
           <HeroSection />

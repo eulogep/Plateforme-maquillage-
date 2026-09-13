@@ -348,6 +348,18 @@
   }
 
   /*
+   * Styled cursor. `.custom-cursor-active` is added to <html> by
+   * CustomCursor only after it confirms a fine pointer and no
+   * reduced-motion preference — so the system cursor only ever disappears
+   * once our replacement is actually mounted and tracking, never as a bare
+   * CSS rule that could outlive a script error.
+   */
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: none !important;
+  }
+
+  /*
    * A single thin gold rule, the board's recurring separator. Used under
    * section eyebrows and beside the wordmark.
    */
