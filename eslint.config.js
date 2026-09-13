@@ -4,7 +4,12 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['dist'] },
+  // supabase/functions/** runs on Deno, not in the browser/Vite app — it's
+  // linted separately with `deno lint` (see supabase/functions/*/README.md),
+  // which understands Deno's globals. This project's ESLint config only
+  // knows the browser globals, so it would otherwise flag `Deno` as
+  // undefined.
+  { ignores: ['dist', 'supabase/functions/**'] },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {

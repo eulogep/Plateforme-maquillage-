@@ -1,0 +1,32 @@
+
+> emma-cosmetics@0.0.0 build
+> vite build --outDir /private/tmp/emma-secondary-audit-build
+
+vite v6.3.5 building for production...
+
+(!) outDir /private/tmp/emma-secondary-audit-build is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+(node:2571) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+transforming...
+✓ 2600 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../private/tmp/emma-secondary-audit-build/index.html                                     1.58 kB │ gzip:   0.70 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/look-special-event-BZN1cixs.jpg       119.52 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/look-bridal-process-CBYMkmAG.jpg      197.05 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/logo-lockup-on-light-DzzDPOmq.png     201.69 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/logo-lockup-on-dark-BjBxeoKr.png      211.27 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/look-full-glam-DL37e3JL.jpg           224.66 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/look-natural-glam-Dmx8lyLz.jpg        239.56 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/look-timeless-CFDko1PK.jpg            263.49 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/logo-emblem-DdZu60eB.png              323.06 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/about-emmanuelle-BP5jKPFM.jpg         343.10 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/hero-precision-elevated-BgU1Rf8L.jpg  344.58 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/look-creative-glam-DXlgNawo.jpg       360.92 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/index-DM8x3CLB.css                    107.87 kB │ gzip:  17.65 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/PaymentStep-DCUTGNyF.js                18.40 kB │ gzip:   6.82 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/index-c6LbeKK2.js                     258.33 kB │ gzip:  81.01 kB
+../../../../private/tmp/emma-secondary-audit-build/assets/BookingFlow-WaOOw3Vz.js               414.48 kB │ gzip: 114.99 kB
+✓ built in 2.59s

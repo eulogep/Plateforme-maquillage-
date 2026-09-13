@@ -1,0 +1,36 @@
+{
+  "status": "open",
+  "source": "Secondary public site https://emma-mackup.netlify.app and existing primary copy",
+  "items": [
+    {
+      "field": "phone",
+      "value": "+1 (540) 555-0148",
+      "reason": "Conflicts with the user-confirmed phone +1 571 266 9829; do not import."
+    },
+    {
+      "field": "email",
+      "value": "makeupbyemma2020@gmail.com",
+      "reason": "Public on the secondary site but not confirmed for the primary project."
+    },
+    {
+      "field": "service_prices_and_policy",
+      "value": "Basic Glam $130, Signature Glam $150, On Demand Glam $300, Bridal $600; $50 deposit and listed late/travel rules",
+      "reason": "Business terms are unverified and must not replace existing primary booking values."
+    },
+    {
+      "field": "testimonials_and_metrics",
+      "value": "Ashley M. testimonial; years, faces, weddings, response-time, and satisfaction statistics",
+      "reason": "Identities and performance claims require confirmation before publication."
+    },
+    {
+      "field": "secondary_social_links",
+      "value": "@make_up_byemma on Instagram and WhatsApp link",
+      "reason": "Public but not confirmed as the primary project's official channels."
+    },
+    {
+      "field": "primary_product_catalog",
+      "value": "Cosmetics product names, prices, ratings, review counts, delivery and return claims",
+      "reason": "Existing primary content contains business/e-commerce claims that were not validated during this comparison."
+    }
+  ]
+}
