@@ -16,3 +16,5 @@ supabase/.branches/
 supabase/functions/_shared/notifications/brand/.preview/
 
 
+.vercel
+.env*
