@@ -1,7 +1,17 @@
 import { describe, it, expect } from 'vitest'
-import { calculateDeposit } from './depositConfig.js'
+import { calculateDeposit, depositConfig } from './depositConfig.js'
 
 describe('calculateDeposit', () => {
+  it('uses the confirmed $50 fixed deposit by default', () => {
+    expect(depositConfig).toEqual({ type: 'fixed', value: 5000, isConfirmed: true })
+    expect(calculateDeposit(13000)).toMatchObject({
+      amountDueNowCents: 5000,
+      remainingBalanceCents: 8000,
+      depositType: 'fixed',
+      depositValue: 5000,
+    })
+  })
+
   it('computes a percentage deposit and rounds to the nearest cent', () => {
     const result = calculateDeposit(12500, { type: 'percentage', value: 30 })
     expect(result).toEqual({

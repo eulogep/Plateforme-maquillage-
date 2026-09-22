@@ -23,8 +23,8 @@
   - `content.js` — pure template builders (subject/html/text) for all four
     event types. Never fabricates cancellation/deposit policy text, an
     address, or a phone number — optional fields are omitted from the
-    output entirely when absent (see `_shared/businessInfo.js`, where
-    `contactPhone` stays `null`).
+    output entirely when absent. `_shared/businessInfo.js` now contains the
+    confirmed primary phone and booking email.
   - `decision.js` — pure idempotency decision (`decideNotificationAction`)
     and the confirmation-email safety check (`canSendConfirmationEmail`
     refuses anything but a genuinely `confirmed` appointment).

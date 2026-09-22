@@ -1,0 +1,24 @@
+
+> emma-cosmetics@0.0.0 lint
+> eslint .
+
+
+/Users/eulogemabiala/Projects/emma-cosmetics/src/components/ui/badge.jsx
+  44:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/eulogemabiala/Projects/emma-cosmetics/src/components/ui/button.jsx
+  55:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/eulogemabiala/Projects/emma-cosmetics/src/components/ui/form.jsx
+  135:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/eulogemabiala/Projects/emma-cosmetics/src/components/ui/navigation-menu.jsx
+  151:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/eulogemabiala/Projects/emma-cosmetics/src/components/ui/sidebar.jsx
+  681:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/eulogemabiala/Projects/emma-cosmetics/src/components/ui/toggle.jsx
+  43:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+✖ 6 problems (0 errors, 6 warnings)

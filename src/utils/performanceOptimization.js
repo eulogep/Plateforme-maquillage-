@@ -128,9 +128,13 @@ export const addResourceHints = () => {
 export const loadComponentsLazily = () => {
   // Dynamic imports for non-critical components
   const lazyComponents = {
-    gallery: () => import('../components/GallerySection.jsx'),
-    booking: () => import('../components/BookingSection.jsx'),
-    testimonials: () => import('../components/TestimonialsSection.jsx')
+    selectedLooks: () => import('../components/SelectedLooks.jsx'),
+    services: () => import('../components/ServicesSection.jsx'),
+    artistry: () => import('../components/ArtistrySection.jsx'),
+    booking: () => import('../components/booking/BookingFlow.jsx'),
+    policies: () => import('../components/PoliciesSection.jsx'),
+    faq: () => import('../components/FaqSection.jsx'),
+    finalCta: () => import('../components/FinalCta.jsx')
   };
 
   return lazyComponents;
@@ -160,4 +164,3 @@ export const measurePerformance = () => {
     });
   }
 };
-

@@ -28,7 +28,7 @@ const PoliciesSection = () => {
 
       <Accordion
         type="multiple"
-        className="mx-auto grid max-w-[1000px] grid-cols-1 gap-px border border-brand-rule bg-brand-rule lg:grid-cols-5"
+        className="mx-auto grid max-w-[1000px] grid-cols-1 gap-px border border-brand-rule bg-brand-rule md:grid-cols-2 lg:grid-cols-3"
       >
         {policies.map((policy) => (
           <AccordionItem

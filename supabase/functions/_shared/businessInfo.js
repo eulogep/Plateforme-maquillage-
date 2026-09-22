@@ -3,10 +3,8 @@
 // can't cross the Vite "@/" alias boundary (same rationale as
 // BUSINESS_TIMEZONE in create-booking/index.ts). Keep in sync manually.
 //
-// Only include facts that are actually confirmed. contactPhone is now set
-// (confirmed by Emmanuelle) — templates include it. Do not add
-// cancellation/deposit policy wording here — that content doesn't exist
-// yet and must not be fabricated in notification templates either.
+// Confirmed business facts used by notification templates. `contactPhone`
+// is the primary number; both confirmed numbers are shown on the website.
 export const businessInfo = {
   // Trading name, matching the official brand mark and
   // src/config/business.js (Milestone 6.5). `artistName` is kept separate
@@ -14,7 +12,7 @@ export const businessInfo = {
   name: 'Makeup-by Emma',
   artistName: 'Emmanuelle Singani',
   locationLine: '60 Susa Dr, Suite 121, Stafford, VA 22554',
-  contactEmail: 'emmanuellesingani23@gmail.com',
+  contactEmail: 'makeupbyemma2020@gmail.com',
   contactPhone: '+15712669829',
   timezone: 'America/New_York',
 }

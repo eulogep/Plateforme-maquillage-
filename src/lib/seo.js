@@ -62,8 +62,9 @@ function buildLocalBusinessSchema() {
     },
     email: business.contact.email,
   }
-  if (business.contact.phone) {
-    schema.telephone = business.contact.phone
+  const phones = (business.contact.phones ?? [business.contact.phone]).filter(Boolean)
+  if (phones.length) {
+    schema.telephone = phones
   }
   const sameAs = [...business.social.instagram, business.social.facebook].filter(Boolean)
   if (sameAs.length) {

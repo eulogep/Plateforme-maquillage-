@@ -4,20 +4,15 @@
 // calculateDeposit() below, run server-side against the service's
 // authoritative price_cents.
 //
-// NOT CONFIRMED by Emmanuelle. This is a development/test placeholder —
-// see src/config/business.js's `deposit` export (the client-facing
-// equivalent) and its own "pending confirmation" note. Do not treat these
-// values as a real business policy; change them here (or via env vars)
-// once Emmanuelle confirms the real structure — nothing else needs to
-// change, since every appointment snapshots the values actually used at
-// payment-creation time (see the Milestone 5 migration).
+// Confirmed by the client on 2026-09-10. Fixed values are stored in cents;
+// every appointment snapshots the values used at payment-creation time.
 export const depositConfig = {
   // 'fixed' (deposit_value is a flat cents amount) | 'percentage'
   // (deposit_value is 0-100) | 'full_payment' (the whole service price is
   // due now, deposit_value is ignored).
-  type: 'percentage',
-  value: 30,
-  isConfirmed: false,
+  type: 'fixed',
+  value: 5000,
+  isConfirmed: true,
 }
 
 /**

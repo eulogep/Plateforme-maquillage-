@@ -9,8 +9,8 @@ import { Lightbox, useLightbox } from '@/components/Lightbox'
 const MotionDiv = motion.div
 const MotionFigure = motion.figure
 
-// "Selected Looks" editorial filmstrip. Desktop: an even row filling a fixed
-// height, matching the frozen design. Mobile: a horizontal-scroll strip of
+// "Selected Looks" gallery. Desktop: a grid accommodating the expanded
+// collection without squeezing the portraits. Mobile: a horizontal-scroll strip of
 // fixed-width cards, matching the design's mobile homepage screen.
 //
 // The photography carries this section, so it is presented unfiltered — the
@@ -85,17 +85,17 @@ const SelectedLooks = () => {
         ))}
       </div>
 
-      {/* Desktop: even filmstrip row */}
-      <div className="hidden h-[400px] gap-[2px] overflow-hidden lg:flex">
+      {/* Desktop: keep portraits readable as the collection grows. */}
+      <div className="hidden gap-3 lg:grid lg:grid-cols-4 xl:grid-cols-6">
         {selectedLooks.map((look, index) => (
           <MotionDiv
             key={look.image}
-            className="img-zoom group relative min-w-0 flex-1"
+            className="img-zoom group relative aspect-[3/4] min-w-0"
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: '-60px' }}
             variants={tileVariants}
-            transition={{ duration: 0.6, delay: index * 0.08, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.6, delay: (index % 6) * 0.08, ease: [0.4, 0, 0.2, 1] }}
           >
             <button
               type="button"

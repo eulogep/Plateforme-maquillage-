@@ -1,0 +1,18 @@
+
+> emma-cosmetics@0.0.0 test
+> vitest run --reporter=dot
+
+(node:2555) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+ RUN  v3.2.7 /Users/eulogemabiala/Projects/emma-cosmetics
+
+······································································································································································································stderr | src/booking/availability.test.js > mock fallback (no Supabase configured in test env) > loadAvailabilityContext resolves with a usable shape
+[booking] Falling back to mock availability data (Supabase is not configured). See supabase/README.md and .env.example.
+
+···············
+
+ Test Files  16 passed (16)
+      Tests  214 passed (214)
+   Start at  15:43:36
+   Duration  2.47s (transform 304ms, setup 0ms, collect 3.36s, tests 862ms, environment 2ms, prepare 1.53s)

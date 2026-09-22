@@ -1,6 +1,6 @@
-import { Instagram, Facebook, Mail } from 'lucide-react'
+import { Instagram, Facebook, Mail, MessageCircle } from 'lucide-react'
 import { logoLockupOnDark, LOCKUP_ALT } from '@/assets/brand'
-import { business, formatBusinessPhone } from '@/config/business'
+import { addOnServices, business, formatBusinessPhone, services } from '@/config/business'
 
 // Content below follows the approved Claude Design homepage footer exactly
 // where it specifies real values (navigation labels, service names, address,
@@ -16,14 +16,7 @@ const NAV_LINKS = [
   { label: 'Policies', href: '#policies' },
   { label: 'Contact', href: '#contact' },
 ]
-const SERVICE_LINKS = [
-  'Natural Glam',
-  'Soft Glam',
-  'Full Glam',
-  'Bridal Makeup',
-  'Special Event',
-  'Makeup Lessons',
-]
+const SERVICE_LINKS = [...services, ...addOnServices].map((service) => service.name)
 
 const Footer = () => {
   return (
@@ -78,16 +71,22 @@ const Footer = () => {
             >
               {business.contact.email}
             </a>
-            {business.contact.phone ? (
+            <a
+              href={`mailto:${business.contact.bridalEmail}`}
+              className="link-underline text-brand-on-dark-muted hover:text-brand-champagne"
+            >
+              Bridal: {business.contact.bridalEmail}
+            </a>
+            {(business.contact.phones ?? [business.contact.phone]).filter(Boolean).map((phone) => (
               <a
-                href={`tel:${business.contact.phone}`}
+                key={phone}
+                href={`tel:${phone}`}
                 className="link-underline text-brand-on-dark-muted hover:text-brand-champagne"
               >
-                {formatBusinessPhone(business.contact.phone)}
+                {formatBusinessPhone(phone)}
               </a>
-            ) : (
-              <span className="text-brand-taupe italic">Phone — to be confirmed</span>
-            )}
+            ))}
+            <span>{business.contact.responseTime}</span>
             <div className="mt-2 flex gap-4">
               <a
                 href={business.social.instagram[0]}
@@ -106,6 +105,15 @@ const Footer = () => {
                 className="text-brand-on-dark-muted transition-colors hover:text-brand-champagne"
               >
                 <Facebook className="h-4 w-4" />
+              </a>
+              <a
+                href={business.social.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="text-brand-on-dark-muted transition-colors hover:text-brand-champagne"
+              >
+                <MessageCircle className="h-4 w-4" />
               </a>
               <a
                 href={`mailto:${business.contact.email}`}
