@@ -1,0 +1,9 @@
+.git
+.claude
+design-reference
+docs/audits
+.env
+.env.*
+node_modules
+dist
+coverage
